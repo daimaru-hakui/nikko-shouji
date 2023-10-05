@@ -11,14 +11,14 @@ const Sidebar = () => {
   const pathname = usePathname();
   return (
     <aside
-      className="grid min-h-screen w-[calc(250px)] bg-zinc-100 hidden md:block"
+      className="grid min-h-screen w-[calc(250px)] bg-white hidden md:block"
       style={{
         transform: isSidebar ? "translateX(0)" : "translateX(-250px)",
         transition: "0.2s",
       }}
     >
       <div className="sticky top-0">
-        <div className="px-3 h-12 flex items-center"><Logo/></div>
+        <div className="px-3 h-12 flex items-center"><Logo /></div>
         <ul className="px-2">
           {sidebarLinks.map(({ path, name, icon }) => (
             <li

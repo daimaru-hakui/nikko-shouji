@@ -14,7 +14,7 @@ const DrawerSidebar: FC = () => {
   return (
     <>
       <aside
-        className="min-h-screen bg-zinc-100 block md:hidden fixed z-30 top-0"
+        className="min-h-screen bg-gray-100 block md:hidden fixed z-30 top-0"
         style={{
           transform: isSidebar ? "translateX(-250px)" : "translateX(0)",
           transition: "0.2s",
