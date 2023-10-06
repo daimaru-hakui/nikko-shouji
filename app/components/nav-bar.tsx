@@ -2,13 +2,6 @@
 import { useStore } from "@/store";
 import React from "react";
 import { BiMenuAltLeft, BiMenu } from "react-icons/bi";
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Button,
-} from "@material-tailwind/react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import DropDown from "./drop-down";
@@ -20,10 +13,12 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <div className="flex items-center justify-between w-full h-10 bg-indigo-950 sticky top-0 z-10">
+    <div 
+    className="flex items-center justify-between w-full h-10 sticky top-0 z-10 bg-white"
+    >
       <div className="p-2">
         <BiMenuAltLeft
-          style={{ fontSize: "24px" }}
+          style={{ fontSize: "24px",transition: "0.2s" }}
           className="cursor-pointer"
           onClick={() => toggleIsSidebar()}
         />

@@ -11,33 +11,23 @@ export const sidebarLinks = [
     icon: <MdOutlineDashboardCustomize />,
   },
   {
-    path: "/dashboard/add-product",
-    name: "付属品登録",
+    path: "/dashboard/order",
+    name: "発注入力",
     icon: <MdAddTask />,
   },
   {
-    path: "/dashboard/all-products",
-    name: "付属品一覧",
-    icon: <FaTasks />,
-  },
-  {
-    path: "/dashboard/expected-arrivals",
-    name: "入荷予定",
-    icon: <SlCalender />,
-  },
-  {
-    path: "/dashboard/order",
+    path: "/dashboard/order-histories",
     name: "発注履歴",
     icon: <FaHistory />,
   },
   {
-    path: "/dashboard/incoming",
-    name: "入荷履歴",
-    icon: <RiIndentIncrease />,
+    path: "/dashboard/shipping-schedules",
+    name: "出荷予定（発注残）",
+    icon: <SlCalender />,
   },
   {
-    path: "/dashboard/outgoing",
-    name: "出庫履歴",
+    path: "/dashboard/shipping-histories",
+    name: "出荷履歴",
     icon: <RiIndentDecrease />,
   },
 ];

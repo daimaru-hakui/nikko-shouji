@@ -6,12 +6,12 @@ import DrawerSidebar from "@/app/components/drawer-sidebar";
 import Sidebar from "../components/sidebar";
 import { useStore } from "@/store";
 import Navbar from "../components/nav-bar";
+import "../globals.css";
 
-const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
+const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
   const supabase = createClientComponentClient();
   const isSidebar = useStore((state) => state.isSidebar);
   const setSession = useStore((state) => state.setSession);
-  const [open, setOpen] = React.useState(true);
 
   const getSession = useCallback(async () => {
     const {
@@ -25,44 +25,22 @@ const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
     getSession();
   }, [getSession]);
 
-  useEffect(() => {
-    const onResize = () => window.innerWidth >= 768 ? setOpen(false) : setOpen(true);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  console.log(open);
-
-
-  const StylesOneColumn = {
-    display: "grid",
-    gridTemplateColumns: open ? "1fr" : "0 1fr",
-    transition: "0.2s",
-    width: "100vw"
-  };
-  const StylesTwoolumn = {
-    display: "grid",
-    gridTemplateColumns: open ? "1fr" : "250px 1fr",
-    transition: "0.2s",
-    width: "100vw"
-  };
-
-
   console.log("dashboard");
   return (
     <>
       <div
-        style={isSidebar ? StylesTwoolumn : StylesOneColumn}
+        style={{ transition: "0.2s" }}
+        className={`${isSidebar ? "sidebarTwoColumn" : "sidebarOneColumn"} `}
       >
         <Sidebar />
         <DrawerSidebar />
-        <main className={`grid content-start w-full`}>
+        <main
+          className={`grid content-start w-full`}
+        >
           <Navbar />
-          <div className="px-6 py-3 w-full overflow-hidden">
-            {children}
-          </div>
+          <div className="p-6 md:p-12 w-full flex flex-col justify-start items-center">{children}</div>
         </main>
-      </div >
+      </div>
     </>
   );
 };
