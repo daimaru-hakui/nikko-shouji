@@ -140,7 +140,6 @@ const OrderForm = () => {
     };
   };
 
-  console.log(carts);
   return (
     <>
       <StepperWithContent
