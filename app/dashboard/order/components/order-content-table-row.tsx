@@ -14,7 +14,7 @@ interface Props {
   onDragEnd: () => void;
 }
 
-const OrderTableRow: FC<Props> = ({
+const OrderContentTableRow: FC<Props> = ({
   methods,
   idx,
   removeContentHandler,
@@ -23,15 +23,15 @@ const OrderTableRow: FC<Props> = ({
   onDragLeave,
   onDragEnd,
 }) => {
-  const { register } = methods;
+  const { register, watch } = methods;
 
 
   const inputStyle =
-    "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
+    "m-0.5 !border !border-gray-300 bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500";
 
   return (
-    <tr className="mt-6"
-      draggable={true}
+    <tr
+      draggable={watch("contents").length === 1 ? false : true}
       onDragStart={onDragStart}
       onDragEnter={onDragEnter}
       onDragLeave={onDragLeave}
@@ -49,7 +49,8 @@ const OrderTableRow: FC<Props> = ({
       </td>
       <td>
         <select
-          className={`${inputStyle} p-3.5`}
+          style={{ padding: "0.8rem" }}
+          className={`${inputStyle} `}
           defaultValue=""
           {...register(`contents.${idx}.maker`)}
         >
@@ -61,7 +62,7 @@ const OrderTableRow: FC<Props> = ({
       </td>
       <td>
         <input
-          className={`${inputStyle} p-3 w-36`}
+          className={`${inputStyle} p-3 min-w-36`}
           {...register(`contents.${idx}.productNumber`)}
         />
       </td>
@@ -87,23 +88,25 @@ const OrderTableRow: FC<Props> = ({
         <input
           type="number"
           className={`${inputStyle} p-3 w-24 text-center`}
-          {...register(`contents.${idx}.quantity`)}
+          {...register(`contents.${idx}.quantity`, { required: true, min: 0 })}
         />
       </td>
       <td>
         <input
-          className={`${inputStyle} p-3 w-36`}
+          className={`${inputStyle} p-3 w-full`}
           {...register(`contents.${idx}.comment`)}
         />
       </td>
       <td className="p-3">
-        <AiOutlineDelete
-          className="cursor-pointer"
-          onClick={removeContentHandler}
-        />
+        {idx !== 0 && (
+          <AiOutlineDelete
+            className="cursor-pointer"
+            onClick={removeContentHandler}
+          />
+        )}
       </td>
     </tr>
   );
 };
 
-export default OrderTableRow;
+export default OrderContentTableRow;

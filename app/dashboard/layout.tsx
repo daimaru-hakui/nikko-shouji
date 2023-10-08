@@ -38,7 +38,9 @@ const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
           className={`grid content-start w-full`}
         >
           <Navbar />
-          <div className="p-6 md:p-12 w-full flex flex-col justify-start items-center">{children}</div>
+          <div
+            className="w-full p-6 flex flex-col justify-start items-center overflow-hidden">{children}
+          </div>
         </main>
       </div>
     </>

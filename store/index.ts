@@ -8,6 +8,10 @@ type Store = {
   toggleSidebar: () => void;
   isLoading: boolean;
   setIsLoading: (bool: boolean) => void;
+  carts: Carts;
+  setCartContents: (orderInputs: OrderInputs) => void;
+  setCartOthers: (other: { name: string, value: boolean | string | number; }) => void;
+  resetCarts: () => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -17,4 +21,30 @@ export const useStore = create<Store>((set) => ({
   setIsLoading: (bool) => set({ isLoading: bool }),
   isSidebar: true,
   toggleSidebar: () => set((state) => ({ isSidebar: !state.isSidebar })),
+  carts: {
+    shippingAddress: 0,
+    sample: false,
+    orderNumber: "",
+    topicName: "",
+    desiredDeliveryOn: "",
+    contents: []
+  },
+  setCartContents: (orderInputs) => set((state) => {
+    const array = { ...state.carts, ...orderInputs };
+    return { carts: array };
+  }),
+  setCartOthers: (other) => set((state) => {
+    const array = { ...state.carts, [other.name]: other.value };
+    return { carts: array };
+  }),
+  resetCarts: () => set({
+    carts: {
+      shippingAddress: 0,
+      sample: false,
+      orderNumber: "",
+      topicName: "",
+      desiredDeliveryOn: "",
+      contents: []
+    },
+  })
 }));
