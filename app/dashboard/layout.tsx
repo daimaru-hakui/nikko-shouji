@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect } from "react";
-import "../../app/globals.css";
+// import "../../app/globals.css";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import DrawerSidebar from "@/app/components/drawer-sidebar";
 import Sidebar from "../components/sidebar";
@@ -8,7 +8,7 @@ import { useStore } from "@/store";
 import Navbar from "../components/nav-bar";
 import "../globals.css";
 
-const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
+const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
   const supabase = createClientComponentClient();
   const isSidebar = useStore((state) => state.isSidebar);
   const setSession = useStore((state) => state.setSession);
@@ -38,7 +38,9 @@ const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
           className={`grid content-start w-full`}
         >
           <Navbar />
-          <div className="p-6 md:p-12 w-full flex flex-col justify-start items-center">{children}</div>
+          <div
+            className="w-full p-6 flex flex-col justify-start items-center overflow-hidden">{children}
+          </div>
         </main>
       </div>
     </>

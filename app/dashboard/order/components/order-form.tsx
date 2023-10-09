@@ -1,10 +1,29 @@
 "use client";
 import React from "react";
-import OrderTableRow from "./order-table-row";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Button } from "@material-tailwind/react";
+import { AiOutlinePlus } from "react-icons/ai";
+import StepperWithContent from "./stepper-with-content";
+import OrderContentTable from "./order-content-table";
+import OrderShipping from "./order-shipping";
+import OrderConfirm from "./order-confirm";
+import { useStore } from "@/store";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import OrderCompletion from "./order-completion";
+import { useRouter } from "next/navigation";
+
 
 const OrderForm = () => {
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+  const carts = useStore((state) => state.carts);
+  const resetCarts = useStore((state) => state.resetCarts);
+  const setCartContents = useStore((state) => state.setCartContents);
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [isLastStep, setIsLastStep] = React.useState(false);
+  const [isFirstStep, setIsFirstStep] = React.useState(false);
+  const handleNext = () => !isLastStep && setActiveStep((cur) => cur + 1);
+  const handlePrev = () => !isFirstStep && setActiveStep((cur) => cur - 1);
   const methods = useForm<OrderInputs>({
     defaultValues: {
       contents: [
@@ -21,7 +40,7 @@ const OrderForm = () => {
     },
   });
 
-  const { control, handleSubmit } = methods;
+  const { control, handleSubmit, setValue, reset } = methods;
   const { append, fields, remove } = useFieldArray({
     control,
     name: "contents",
@@ -39,43 +58,169 @@ const OrderForm = () => {
     });
   };
 
-  const removeContentHandler = (idx: number) => {
-    remove(idx);
+  const onClearContent = () => {
+    const result = confirm("削除して宜しいでしょうか");
+    if (!result) return;
+    reset();
+    resetCarts();
   };
 
-  const onSubmit: SubmitHandler<OrderInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<OrderInputs> = (data) => {
+    setCartContents(data);
+    handleNext();
+    window.scrollTo(0, 0);
+  };
+
+  const createOrder = async (carts: Carts) => {
+    const { data: order, error } = await supabase
+      .from("order_histories")
+      .insert({
+        shipping_address_id: Number(carts.shippingAddress),
+        desired_delivery_on: carts.desiredDeliveryOn,
+        order_number: carts.orderNumber.trim(),
+        sample: carts.sample,
+        topic_name: carts.topicName.trim()
+      })
+      .select("id")
+      .single();
+    if (error) {
+      alert(error.message);
+      console.log(error);
+    }
+    if (!order) return;
+
+    console.log(order);
+    return order.id;
+  };
+
+  const createDetails = async (carts: Carts, id: number) => {
+    const array = carts.contents.map((content) => (
+      {
+        order_history_id: id,
+        product_number: content.productNumber.trim(),
+        product_name: content.productName.trim(),
+        color: content.color.trim(),
+        size: content.size.trim() || "",
+        quantity: Number(content.quantity),
+        order_quantity: Number(content.quantity),
+        comment: content.comment.trim() || ""
+      }
+    ));
+    const { error } = await supabase
+      .from("order_details")
+      .insert(
+        [...array]
+      );
+    if (error) {
+      alert(error.message);
+      console.log(error);
+    }
+  };
+
+  const onClickRegisterHandler = async (carts: Carts) => {
+    const id = await createOrder(carts);
+    await createDetails(carts, id);
+    handleNext();
+    resetCarts();
+    reset();
+    router.refresh();
+  };
+
+  const onClickReturnButton = () => {
+    switch (activeStep) {
+      case 0:
+        onClearContent();
+        return;
+      case 1:
+        handlePrev();
+        return;
+      case 2:
+        handlePrev();
+        return;
+      case 3:
+        setActiveStep(0);
+        return;
+    };
+  };
 
   return (
     <>
-      <form className="w-auto" onSubmit={handleSubmit(onSubmit)}>
-        <div className="overflow-auto p-3">
-          <table className="w-auto">
-            <thead>
-              <tr className="text-left">
-                <th className="px-2">メーカー</th>
-                <th className="px-2">品番</th>
-                <th className="px-2">品名</th>
-                <th className="px-2">カラー</th>
-                <th className="px-2">サイズ</th>
-                <th className="px-2">数量</th>
-                <th className="px-2">備考</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fields.map((field, idx) => (
-                <OrderTableRow
-                  key={field.id}
-                  methods={methods}
-                  removeContentHandler={removeContentHandler.bind(null, idx)}
-                  idx={idx}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="w-full mt-6 flex justify-center gap-3">
-          <Button onClick={addTableRow}>追加</Button>
-          <Button type="submit">登録</Button>
+      <StepperWithContent
+        activeStep={activeStep}
+        setIsLastStep={setIsLastStep}
+        setIsFirstStep={setIsFirstStep}
+      />
+      <form className="mt-12" onSubmit={handleSubmit(onSubmit)}>
+        {activeStep === 0 && (
+          <div className="overflow-auto max-h-[calc(100vh-220px)] p-3">
+            <OrderContentTable methods={methods} fields={fields} remove={remove} />
+          </div>
+        )}
+        {activeStep === 1 && (
+          <OrderShipping />
+        )}
+        {activeStep === 2 && (
+          <OrderConfirm />
+        )}
+        {activeStep === 3 && (
+          <OrderCompletion />
+        )}
+
+        {activeStep === 0 && (
+          <div className="w-full mt-3 flex justify-center gap-3">
+            <Button
+              className="flex items-center gap-3"
+              onClick={addTableRow}
+            >
+              <AiOutlinePlus />追加
+            </Button>
+          </div>
+        )}
+
+        <div className="w-full mt-20 pb-12 flex justify-center gap-3">
+          <Button
+            type="button"
+            variant="outlined"
+            className="w-full max-w-xs"
+            onClick={onClickReturnButton}>
+            {activeStep === 0 ?
+              "クリア" :
+              (activeStep === 1 || activeStep === 2 ?
+                "戻る" :
+                "発注画面")}
+          </Button>
+
+          {activeStep === 0 && (
+            <Button
+              type="submit"
+              className="w-full max-w-xs"
+            >
+              次へ進む
+            </Button>
+          )}
+
+          {(activeStep === 1) && (
+            <Button
+              type="button"
+              className="w-full max-w-xs"
+              onClick={() => {
+                handleNext();
+                window.scrollTo(0, 0);
+              }}
+            >
+              次へ進む
+            </Button>
+          )}
+
+          {activeStep === 2 && (
+            <Button
+              type="button"
+              className="w-full max-w-xs"
+              onClick={() => onClickRegisterHandler(carts)}
+            >
+              登録
+            </Button>
+          )}
         </div>
       </form>
     </>
