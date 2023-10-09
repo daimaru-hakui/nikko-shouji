@@ -1,8 +1,9 @@
 "use client";
 import { Database } from '@/schema';
 import { Checkbox } from '@material-tailwind/react';
-import { format } from 'date-fns';
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
+import ShippingScheduleTableRow from './shipping-schedule-table-row';
+import { useStore } from '@/store';
 
 type Order = Database["public"]["Tables"]["orders"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
@@ -21,18 +22,37 @@ interface Props {
 }
 
 const ShippingScheduleTable: FC<Props> = ({ shippingSchedules }) => {
+  const checkedOrders = useStore((state) => state.checkedOrders);
+  const resetCheckedOrders = useStore((state) => state.resetCheckedOrders);
+  const setCheckedOrders = useStore((state) => state.setCheckedOrders);
+
+  useEffect(() => {
+    resetCheckedOrders();
+  }, [resetCheckedOrders]);
+
+  const isCheckedHandler = useCallback((id: number) => {
+    const array = checkedOrders.map((checkedOrder) => (checkedOrder.id));
+    return array.includes(id);
+  }, [checkedOrders]);
+
+  const onAllChecked = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setCheckedOrders(shippingSchedules);
+    } else {
+      resetCheckedOrders();
+    }
+  };
+
   const StyleTableTh = "py-0.5 px-1 text-left border-b";
-  const StyleTableTd = "py-0.5 px-1 text-left border-b";
   return (
-    <div className='mt-12 w-full overflow-auto'>
-      <table className='w-full max-w-[calc(1500px)] min-w-[calc(800px)]'>
+    <div className='w-full overflow-auto'>
+      <table className='w-full max-w-[calc(1500px)] min-w-[calc(1500px)]'>
         <thead>
           <tr>
             <th className={`${StyleTableTh}`}>
               <Checkbox
                 name="sample"
-                // checked={carts.sample}
-                // onChange={handleCheck}
+                onChange={onAllChecked}
                 crossOrigin={undefined}
               />
             </th>
@@ -46,43 +66,18 @@ const ShippingScheduleTable: FC<Props> = ({ shippingSchedules }) => {
             <th className={`${StyleTableTh}`}>カラー</th>
             <th className={`${StyleTableTh} text-center`}>サイズ</th>
             <th className={`${StyleTableTh} text-center`}>数量</th>
+            <th className={`${StyleTableTh}`}>送り先</th>
             <th className={`${StyleTableTh}`}>区分</th>
             <th className={`${StyleTableTh}`}>コメント</th>
           </tr>
         </thead>
         <tbody>
-          {shippingSchedules.map((schedule) => (
-            <tr key={schedule.id}>
-              <td className={`${StyleTableTd}`}>
-                <Checkbox
-                  className=''
-                  name="sample"
-                  // checked={carts.sample}
-                  // onChange={handleCheck}
-                  crossOrigin={undefined}
-                />
-              </td>
-              <td className={`${StyleTableTd}`}>{schedule.id}</td>
-              <td className={`${StyleTableTd}`}>{schedule.orders?.order_number}</td>
-              <td className={`${StyleTableTd}`}>
-                {format(new Date(schedule.created_at), "yyyy年MM月dd日")}
-              </td>
-              <td className={`${StyleTableTd}`}>
-                {schedule?.orders?.desired_delivery_on && (
-                  format(
-                    new Date(schedule?.orders?.desired_delivery_on.toString()),
-                    "yyyy年MM月dd日"))
-                }
-              </td>
-              <td className={`${StyleTableTd}`}>{schedule.maker}</td>
-              <td className={`${StyleTableTd}`}>{schedule.product_number}</td>
-              <td className={`${StyleTableTd}`}>{schedule?.product_name}</td>
-              <td className={`${StyleTableTd}`}>{schedule?.color}</td>
-              <td className={`${StyleTableTd} text-center`}>{schedule?.size}</td>
-              <td className={`${StyleTableTd} text-center`}>{schedule?.quantity}</td>
-              <td className={`${StyleTableTd}`}>{schedule?.orders?.sample ? "サンプル" : "通常発注"}</td>
-              <td className={`${StyleTableTd}`}>{schedule?.comment}</td>
-            </tr>
+          {shippingSchedules.map((shippingSchedule) => (
+            <ShippingScheduleTableRow
+              key={shippingSchedule.id}
+              shippingSchedule={shippingSchedule}
+              isCheckedHandler={isCheckedHandler}
+            />
           ))}
         </tbody>
       </table>

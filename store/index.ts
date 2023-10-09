@@ -1,5 +1,19 @@
 import { create } from "zustand";
 import { Session } from "@supabase/supabase-js";
+import { Database } from "@/schema";
+
+type Order = Database["public"]["Tables"]["orders"]["Row"];
+type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
+type ShippingAddress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
+
+interface OrderRow extends Order {
+  shipping_addresses: ShippingAddress | null;
+};
+
+interface CheckedOrder extends OrderDetail {
+  orders: OrderRow | null;
+};
+
 
 type Store = {
   session: Session | null;
@@ -12,6 +26,10 @@ type Store = {
   setCartContents: (orderInputs: OrderInputs) => void;
   setCartOthers: (other: { name: string, value: boolean | string | number; }) => void;
   resetCarts: () => void;
+  checkedOrders: CheckedOrder[];
+  setCheckedOrders: (checkedOrders: CheckedOrder[]) => void;
+  removeCheckedOrders: (checkedOrder: CheckedOrder) => void;
+  resetCheckedOrders: () => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -46,5 +64,20 @@ export const useStore = create<Store>((set) => ({
       desiredDeliveryOn: "",
       contents: []
     },
-  })
+  }),
+  checkedOrders: [],
+  setCheckedOrders: (checkedOrders) => set((state) => {
+    const array = [...state.checkedOrders, ...checkedOrders];
+    return {
+      checkedOrders: array
+    };
+  }),
+
+  removeCheckedOrders: (checkedOrder) => set((state) => {
+    const array = state.checkedOrders.filter((order) => order.id !== checkedOrder.id);
+    return {
+      checkedOrders: array
+    };
+  }),
+  resetCheckedOrders: () => set({ checkedOrders: [] })
 }));
