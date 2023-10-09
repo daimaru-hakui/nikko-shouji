@@ -11,7 +11,7 @@ const ShippingSchedules: NextPage = async () => {
   const getShippingSchedules = async () => {
     const { data, error } = await supabase
       .from("order_details")
-      .select(`*,orders(*,shipping_addresses(*))`).order("id", { ascending: false });
+      .select(`*,order_histories(*,shipping_addresses(*))`).order("id", { ascending: false });
     if (error) {
       alert(error.message);
     }

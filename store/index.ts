@@ -2,16 +2,16 @@ import { create } from "zustand";
 import { Session } from "@supabase/supabase-js";
 import { Database } from "@/schema";
 
-type Order = Database["public"]["Tables"]["orders"]["Row"];
+type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type ShippingAddress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
-interface OrderRow extends Order {
+interface Order extends OrderHistory {
   shipping_addresses: ShippingAddress | null;
 };
 
 interface CheckedOrder extends OrderDetail {
-  orders: OrderRow | null;
+  order_histories: Order | null;
 };
 
 

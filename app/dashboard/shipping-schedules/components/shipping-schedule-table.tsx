@@ -5,16 +5,16 @@ import React, { FC, useCallback, useEffect } from 'react';
 import ShippingScheduleTableRow from './shipping-schedule-table-row';
 import { useStore } from '@/store';
 
-type Order = Database["public"]["Tables"]["orders"]["Row"];
+type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type ShippingAddress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
-interface OrderRow extends Order {
+interface Order extends OrderHistory {
   shipping_addresses: ShippingAddress | null;
 };
 
 interface ShippingSchedule extends OrderDetail {
-  orders: OrderRow | null;
+  order_histories: Order | null;
 };
 
 interface Props {

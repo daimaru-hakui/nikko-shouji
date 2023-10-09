@@ -35,10 +35,9 @@ const OrderShippingAddressModal = () => {
         選択
       </Button>
       <Dialog open={open} handler={handleOpen} size="lg">
-        <DialogHeader className="flex justify-between">お届け先を選択
-          <Button variant="text">
-            <AiOutlineClose onClick={handleOpen} className="cursor-pointer" />
-          </Button>
+        <DialogHeader className="flex justify-between">
+          お届け先を選択
+          <AiOutlineClose onClick={handleOpen} className="cursor-pointer" />
         </DialogHeader>
         <DialogBody className="h-[30rem] overflow-auto">
           <table className="w-full">

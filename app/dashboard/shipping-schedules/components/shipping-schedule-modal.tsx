@@ -10,6 +10,7 @@ import {
 import { AiOutlineClose } from "react-icons/ai";
 import { useStore } from "@/store";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { format } from "date-fns";
 
 type Inputs = {
   example: string;
@@ -28,7 +29,7 @@ const ShippingScheduleModal = () => {
 
 
   const StyleTableTh = "border-b border-blue-gray-100 bg-blue-gray-50 px-2 py-1 text-left";
-  const StyleTableTd = "px-2 py-1 text-left";
+  const StyleTableTd = "px-2 py-1 text-left text-black border-b";
   const inputStyle =
     "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
 
@@ -44,9 +45,7 @@ const ShippingScheduleModal = () => {
       <Dialog open={open} handler={handleOpen} size="xl">
         <DialogHeader className="flex justify-between">
           出荷処理
-          <Button variant="text">
-            <AiOutlineClose onClick={() => setOpen(false)} className="cursor-pointer" />
-          </Button>
+          <AiOutlineClose onClick={() => setOpen(false)} className="cursor-pointer" />
         </DialogHeader>
         <DialogBody className="pt-0 ">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -56,25 +55,24 @@ const ShippingScheduleModal = () => {
                 <select
                   // style={{ padding: "0.8rem" }}
                   className={`${inputStyle} h-10 py-1 px-2 w-full max-w-[calc(200px)]`}
-                  defaultValue=""
+                  defaultValue={checkedOrders[0]?.order_histories?.shipping_addresses?.customer}
                 // {...register(`contents.${idx}.maker`)}
                 >
-                  <option>ナガイレーベン</option>
-                  <option>自重堂</option>
-                  <option>大丸白衣</option>
-                  <option>カゼン</option>
+                  <option>来店</option>
+                  <option>日紅商事株式会社</option>
                 </select>
               </div>
               <div className="flex flex-col">
                 <label className="mb-1 text-xs">出荷日</label>
                 <input
                   type="date"
+                  defaultValue={format(new Date(), "yyyy-MM-dd")}
                   className={`${inputStyle} h-10  py-1 px-2 w-full max-w-[calc(150px)]`}
                 />
               </div>
             </div>
             <div className="mt-6 h-[calc(60vh)] overflow-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[calc(1100px)]">
                 <thead className="sticky top-0">
                   <tr>
                     <th className={`${StyleTableTh}`}>受付番号</th>
@@ -94,7 +92,7 @@ const ShippingScheduleModal = () => {
                   {checkedOrders.map((checkedOrder) => (
                     <tr key={checkedOrder.id}>
                       <td className={`${StyleTableTd}`}>{checkedOrder.id}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.orders?.order_number}</td>
+                      <td className={`${StyleTableTd}`}>{checkedOrder.order_histories?.order_number}</td>
                       <td className={`${StyleTableTd}`}>{checkedOrder.maker}</td>
                       <td className={`${StyleTableTd}`}>{checkedOrder.product_number}</td>
                       <td className={`${StyleTableTd}`}>{checkedOrder.product_name}</td>
@@ -112,6 +110,9 @@ const ShippingScheduleModal = () => {
                           type="number"
                           className={`${inputStyle} py-1 px-2 w-full max-w-[calc(80px)]`}
                         />
+                      </td>
+                      <td className={`${StyleTableTd} text-left`}>
+                        {checkedOrder.order_histories?.shipping_addresses?.customer}
                       </td>
                     </tr>
                   ))}

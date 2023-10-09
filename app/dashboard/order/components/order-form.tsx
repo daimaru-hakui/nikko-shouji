@@ -10,9 +10,11 @@ import OrderConfirm from "./order-confirm";
 import { useStore } from "@/store";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import OrderCompletion from "./order-completion";
+import { useRouter } from "next/navigation";
 
 
 const OrderForm = () => {
+  const router = useRouter();
   const supabase = createClientComponentClient();
   const carts = useStore((state) => state.carts);
   const resetCarts = useStore((state) => state.resetCarts);
@@ -71,11 +73,11 @@ const OrderForm = () => {
 
   const createOrder = async (carts: Carts) => {
     const { data: order, error } = await supabase
-      .from("orders")
+      .from("order_histories")
       .insert({
         shipping_address_id: Number(carts.shippingAddress),
         desired_delivery_on: carts.desiredDeliveryOn,
-        order_number: "1",
+        order_number: carts.orderNumber.trim(),
         sample: carts.sample,
         topic_name: carts.topicName.trim()
       })
@@ -94,7 +96,7 @@ const OrderForm = () => {
   const createDetails = async (carts: Carts, id: number) => {
     const array = carts.contents.map((content) => (
       {
-        order_id: id,
+        order_history_id: id,
         product_number: content.productNumber.trim(),
         product_name: content.productName.trim(),
         color: content.color.trim(),
@@ -121,6 +123,7 @@ const OrderForm = () => {
     handleNext();
     resetCarts();
     reset();
+    router.refresh();
   };
 
   const onClickReturnButton = () => {
