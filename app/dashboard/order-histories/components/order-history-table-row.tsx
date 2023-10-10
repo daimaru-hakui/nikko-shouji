@@ -107,7 +107,7 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
       <td className={`${StyleTableTd}`}>{order.id}</td>
       <td className={`${StyleTableTd}`}>{order.order_number}</td>
       <td className={`${StyleTableTd}`}>
-        {format(new Date(order.created_at), "yyyy年MM月dd日 HH時MM分")}
+        {format(new Date(order.created_at), "yyyy年MM月dd日 HH時mm分")}
       </td>
       <td className={`${StyleTableTd}`}>{order?.shipping_addresses?.customer}</td>
       <td className={`${StyleTableTd}`}>{getStatus(order.order_status)}</td>

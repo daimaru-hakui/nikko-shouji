@@ -28,7 +28,7 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
     const array = watch("contents");
     const deleteIndex = array.splice(dragIndex, 1)[0];
     array.splice(idx, 0, deleteIndex);
-    setDragArray(array);
+    setValue("contents", array);
     setDragIndex(idx);
   };
 
@@ -40,7 +40,6 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
   };
 
   const onDragEnd = () => {
-    setValue("contents", dragArray);
     setDragIndex(null);
   };
 
