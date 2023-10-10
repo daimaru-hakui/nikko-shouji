@@ -6,7 +6,7 @@ import { CgCopy } from "react-icons/cg";
 interface Props {
   methods: UseFormReturn<OrderInputs, any, undefined>;
   idx: number;
-  removeContentHandler: any;
+  removeRowHandler: () => void;
   onDragStart: () => void;
   onDragEnter: () => void;
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
@@ -17,20 +17,20 @@ interface Props {
 const OrderContentTableRow: FC<Props> = ({
   methods,
   idx,
-  removeContentHandler,
+  removeRowHandler,
   onDragStart,
   onDragEnter,
   onDragLeave,
   onDragEnd,
 }) => {
-  const { register, watch,setValue,getValues } = methods;
+  const { register, watch, setValue, getValues } = methods;
 
-  const copyRow = (idx:number) => {
+  const copyRow = (idx: number) => {
     const contetns = getValues("contents");
     const obj = contetns[idx];
-    contetns.splice(idx,0,obj)
-    setValue("contents",contetns)
-  }
+    contetns.splice(idx, 0, obj);
+    setValue("contents", contetns);
+  };
 
   const inputStyle =
     "m-0.5 !border !border-gray-300 bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500";
@@ -48,8 +48,8 @@ const OrderContentTableRow: FC<Props> = ({
           <CgCopy
             style={{ fontSize: "32px" }}
             className="cursor-pointer"
-            onClick={()=>copyRow(idx)}
-            />
+            onClick={() => copyRow(idx)}
+          />
         </div>
       </td>
       <td className="text-center">
@@ -109,7 +109,7 @@ const OrderContentTableRow: FC<Props> = ({
         {idx !== 0 && (
           <AiOutlineDelete
             className="cursor-pointer"
-            onClick={removeContentHandler}
+            onClick={removeRowHandler}
           />
         )}
       </td>

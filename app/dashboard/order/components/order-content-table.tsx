@@ -14,7 +14,7 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
   const [dragArray, setDragArray] = useState<any>([]);
   const { watch, setValue } = methods;
 
-  const removeContentHandler = (idx: number) => {
+  const removeRowHandler = (idx: number) => {
     remove(idx);
   };
 
@@ -64,7 +64,7 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
           <OrderContentTableRow
             key={field.id}
             methods={methods}
-            removeContentHandler={removeContentHandler.bind(null, idx)}
+            removeRowHandler={removeRowHandler.bind(null, idx)}
             onDragStart={onDragStart.bind(null, idx)}
             onDragEnter={onDragEnter.bind(null, idx)}
             onDragOver={onDragOver}
