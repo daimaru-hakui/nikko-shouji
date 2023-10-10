@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
-import { MdDragIndicator } from "react-icons/md";
+import { CgCopy } from "react-icons/cg";
 
 interface Props {
   methods: UseFormReturn<OrderInputs, any, undefined>;
@@ -23,8 +23,14 @@ const OrderContentTableRow: FC<Props> = ({
   onDragLeave,
   onDragEnd,
 }) => {
-  const { register, watch } = methods;
+  const { register, watch,setValue,getValues } = methods;
 
+  const copyRow = (idx:number) => {
+    const contetns = getValues("contents");
+    const obj = contetns[idx];
+    contetns.splice(idx,0,obj)
+    setValue("contents",contetns)
+  }
 
   const inputStyle =
     "m-0.5 !border !border-gray-300 bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500";
@@ -39,9 +45,11 @@ const OrderContentTableRow: FC<Props> = ({
     >
       <td className="text-center">
         <div className="">
-          <MdDragIndicator
+          <CgCopy
             style={{ fontSize: "32px" }}
-            className="cursor-pointer" />
+            className="cursor-pointer"
+            onClick={()=>copyRow(idx)}
+            />
         </div>
       </td>
       <td className="text-center">
