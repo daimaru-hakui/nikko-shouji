@@ -20,9 +20,9 @@ interface Props {
 }
 
 const OrderForm: FC<Props> = ({ products }) => {
-  const setProducts = useStore((state) => state.setProducts);
   const router = useRouter();
   const supabase = createClientComponentClient();
+  const setProducts = useStore((state) => state.setProducts);
   const carts = useStore((state) => state.carts);
   const resetCarts = useStore((state) => state.resetCarts);
   const setCartContents = useStore((state) => state.setCartContents);

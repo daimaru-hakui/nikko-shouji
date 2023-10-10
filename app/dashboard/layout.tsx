@@ -1,6 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
-// import "../../app/globals.css";
+import React, { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import DrawerSidebar from "@/app/components/drawer-sidebar";
 import Sidebar from "../components/sidebar";
@@ -8,22 +7,21 @@ import { useStore } from "@/store";
 import Navbar from "../components/nav-bar";
 import "../globals.css";
 
-const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
+const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
   const supabase = createClientComponentClient();
   const isSidebar = useStore((state) => state.isSidebar);
   const setSession = useStore((state) => state.setSession);
 
-  const getSession = useCallback(async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
-    setSession(session);
-  }, [supabase, setSession]);
-
   useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) return;
+      setSession(session);
+    };
     getSession();
-  }, [getSession]);
+  }, [setSession, supabase.auth]);
 
   console.log("dashboard");
   return (
@@ -34,12 +32,10 @@ const Dashboardlayout = ({ children }: { children: React.ReactNode; }) => {
       >
         <Sidebar />
         <DrawerSidebar />
-        <main
-          className={`grid content-start w-full`}
-        >
+        <main className={`grid content-start w-full`}>
           <Navbar />
-          <div
-            className="w-full p-6 flex flex-col justify-start items-center overflow-hidden">{children}
+          <div className="w-full p-6 flex flex-col justify-start items-center overflow-hidden">
+            {children}
           </div>
         </main>
       </div>

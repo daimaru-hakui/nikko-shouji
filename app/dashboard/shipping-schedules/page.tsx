@@ -19,15 +19,25 @@ const ShippingSchedules: NextPage = async () => {
     return data;
   };
 
+  const getUserId = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    return session?.user.id;
+  };
+
+
   const shippingSchedules = await getShippingSchedules();
+  const userId = await getUserId()
 
   if (!shippingSchedules) return;
+  if(!userId) return
 
   return (
     <div className="w-full max-w-[calc(1500px)] mx-auto">
       <h1 className="mt-6 text-3xl font-bold">出荷予定（発注残）</h1>
       <ShippingScheduleModal />
-      <ShippingScheduleTable shippingSchedules={shippingSchedules} />
+      <ShippingScheduleTable shippingSchedules={shippingSchedules} userId={userId}/>
     </div>
   );
 };

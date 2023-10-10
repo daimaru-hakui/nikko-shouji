@@ -1,20 +1,22 @@
 "use client";
-import { Database } from '@/schema';
-import { Button } from '@material-tailwind/react';
-import React, { FC } from 'react';
+import { Database } from "@/schema";
+import { Button } from "@material-tailwind/react";
+import React, { FC } from "react";
 import { format } from "date-fns";
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
-import OrderHistoryModal from './order-history-modal';
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import OrderHistoryModal from "./order-history-modal";
+import { useStore } from "@/store";
 
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
-type ShippingAddress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
+type ShippingAddress =
+  Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
 interface Order extends OrderHistory {
   order_details: OrderDetail[] | null;
   shipping_addresses: ShippingAddress | null;
-};
+}
 
 interface Props {
   order: Order;
@@ -22,9 +24,13 @@ interface Props {
 
 const OrderHistoryTableRow: FC<Props> = ({ order }) => {
   const supabase = createClientComponentClient<Database>();
+  const currentUser = useStore((state) => state.currentUser);
   const router = useRouter();
 
-  const handleChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, id: number) => {
+  const handleChangeStatus = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    id: number
+  ) => {
     const { data } = await supabase
       .from("order_histories")
       .select("*")
@@ -38,7 +44,7 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
     const { error } = await supabase
       .from("order_histories")
       .update({
-        order_status: e.target.value
+        order_status: e.target.value,
       })
       .eq("id", id);
     if (error) {
@@ -65,8 +71,9 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
       .from("order_histories")
       .update({
         deleted_at: new Date().toISOString(),
-        order_status: "CANCEL"
-      }).eq("id", id);
+        order_status: "CANCEL",
+      })
+      .eq("id", id);
     if (error) {
       alert(error.message);
       console.log(error);
@@ -109,12 +116,14 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
       <td className={`${StyleTableTd}`}>
         {format(new Date(order.created_at), "yyyy年MM月dd日 HH時mm分")}
       </td>
-      <td className={`${StyleTableTd}`}>{order?.shipping_addresses?.customer}</td>
+      <td className={`${StyleTableTd}`}>
+        {order?.shipping_addresses?.customer}
+      </td>
       <td className={`${StyleTableTd}`}>{getStatus(order.order_status)}</td>
       <td className={`${StyleTableTd}`}>
         {order.order_status === "UNREAD" && (
           <Button
-            className='py-2 px-4'
+            className="py-2 px-4"
             size="sm"
             onClick={() => handleClickCancel(order.id)}
           >
@@ -122,20 +131,22 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
           </Button>
         )}
       </td>
-      <td className={`${StyleTableTd}`}>
-        <select
-          style={{ padding: "0.5rem" }}
-          className={`${inputStyle} `}
-          defaultValue={order.order_status}
-          disabled={order.order_status === "CANCEL" ? true : false}
-          onChange={(e) => handleChangeStatus(e, order.id)}
-        >
-          <option value="UNREAD">未読</option>
-          <option value="READ">既読</option>
-          <option value="ARRANGE">手配済み</option>
-          <option value="SHIPPING">出荷</option>
-        </select>
-      </td>
+      {currentUser?.role === "admin" && (
+        <td className={`${StyleTableTd}`}>
+          <select
+            style={{ padding: "0.5rem" }}
+            className={`${inputStyle} `}
+            defaultValue={order.order_status}
+            disabled={order.order_status === "CANCEL" ? true : false}
+            onChange={(e) => handleChangeStatus(e, order.id)}
+          >
+            <option value="UNREAD">未読</option>
+            <option value="READ">既読</option>
+            <option value="ARRANGE">手配済み</option>
+            <option value="SHIPPING">出荷</option>
+          </select>
+        </td>
+      )}
     </tr>
   );
 };

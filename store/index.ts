@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Session } from "@supabase/supabase-js";
 import { Database } from "@/schema";
 
+type User = Database["public"]["Tables"]["users"]["Row"];
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type ShippingAddress =
@@ -16,6 +17,8 @@ interface CheckedOrder extends OrderDetail {
 }
 
 type Store = {
+  currentUser: User | null;
+  setCurrentUser: (currentUser: User) => void;
   session: Session | null;
   setSession: (session: Session) => void;
   isSidebar: boolean;
@@ -40,6 +43,8 @@ type Store = {
 };
 
 export const useStore = create<Store>((set) => ({
+  currentUser: null,
+  setCurrentUser: (currentUser) => set({ currentUser }),
   session: null,
   setSession: (session) => set(() => ({ session: session })),
   isLoading: false,

@@ -11,11 +11,12 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="ja" className="bg-gray-100/10">
       <body className={`${inter.className}`}>{children}</body>
