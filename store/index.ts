@@ -12,7 +12,7 @@ interface Order extends OrderHistory {
   shipping_addresses: ShippingAddress | null;
 }
 
-interface CheckedOrder extends OrderDetail {
+export interface CheckedOrder extends OrderDetail {
   order_histories: Order | null;
 }
 
