@@ -47,7 +47,7 @@ const OrderShipping: FC = () => {
     "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
 
   return (
-    <div className="w-full mx-auto">
+    <div className="w-full max-w-[calc(1000px)] mx-auto">
       <div className='font-bold'>お届け先/お届け方法</div>
       <div className='w-full mt-3 p-3 flex flex-col md:flex-row justify-between border border-gray-900/10'>
         <div className=''>

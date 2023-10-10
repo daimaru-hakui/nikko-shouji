@@ -1,3 +1,5 @@
+import { useStore } from "@/store";
+import { makerList } from "@/utils/makerList";
 import React, { FC } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -24,6 +26,9 @@ const OrderContentTableRow: FC<Props> = ({
   onDragEnd,
 }) => {
   const { register, watch, setValue, getValues } = methods;
+  const productNumbers = useStore((state) => state.productNumbers);
+  const productNames = useStore((state) => state.productNames);
+  const productColors = useStore((state) => state.productColors);
 
   const copyRow = (idx: number) => {
     const contetns = getValues("contents");
@@ -62,34 +67,56 @@ const OrderContentTableRow: FC<Props> = ({
           defaultValue=""
           {...register(`contents.${idx}.maker`)}
         >
-          <option>ナガイレーベン</option>
-          <option>自重堂</option>
-          <option>大丸白衣</option>
-          <option>カゼン</option>
+          {makerList.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
         </select>
       </td>
       <td>
         <input
+          autoComplete="off"
+          list="productNumbers"
           className={`${inputStyle} p-3 min-w-36`}
-          {...register(`contents.${idx}.productNumber`)}
+          {...register(`contents.${idx}.productNumber`, { maxLength: 20 })}
         />
+        <datalist id="productNumbers">
+          {productNumbers.map((value) => (
+            <option key={value} value={value}></option>
+          ))}
+        </datalist>
       </td>
       <td>
         <input
+          autoComplete="off"
+          list="productNames"
           className={`${inputStyle} p-3`}
-          {...register(`contents.${idx}.productName`)}
+          {...register(`contents.${idx}.productName`, { maxLength: 20 })}
         />
+        <datalist id="productNames">
+          {productNames.map((value) => (
+            <option key={value} value={value}></option>
+          ))}
+        </datalist>
       </td>
       <td>
         <input
+          autoComplete="off"
+          list="productColors"
           className={`${inputStyle} p-3`}
-          {...register(`contents.${idx}.color`)}
+          {...register(`contents.${idx}.color`, { maxLength: 20 })}
         />
+        <datalist id="productColors">
+          {productColors.map((value) => (
+            <option key={value} value={value}></option>
+          ))}
+        </datalist>
       </td>
       <td>
         <input
           className={`${inputStyle} p-3 w-24 text-center`}
-          {...register(`contents.${idx}.size`)}
+          {...register(`contents.${idx}.size`, { maxLength: 20 })}
         />
       </td>
       <td>
@@ -102,7 +129,7 @@ const OrderContentTableRow: FC<Props> = ({
       <td>
         <input
           className={`${inputStyle} p-3 w-full`}
-          {...register(`contents.${idx}.comment`)}
+          {...register(`contents.${idx}.comment`, { maxLength: 50 })}
         />
       </td>
       <td className="p-3">

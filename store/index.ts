@@ -4,16 +4,16 @@ import { Database } from "@/schema";
 
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
-type ShippingAddress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
+type ShippingAddress =
+  Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
 interface Order extends OrderHistory {
   shipping_addresses: ShippingAddress | null;
-};
+}
 
 interface CheckedOrder extends OrderDetail {
   order_histories: Order | null;
-};
-
+}
 
 type Store = {
   session: Session | null;
@@ -24,12 +24,19 @@ type Store = {
   setIsLoading: (bool: boolean) => void;
   carts: Carts;
   setCartContents: (orderInputs: OrderInputs) => void;
-  setCartOthers: (other: { name: string, value: boolean | string | number; }) => void;
+  setCartOthers: (other: {
+    name: string;
+    value: boolean | string | number;
+  }) => void;
   resetCarts: () => void;
   checkedOrders: CheckedOrder[];
   setCheckedOrders: (checkedOrders: CheckedOrder[]) => void;
   removeCheckedOrders: (checkedOrder: CheckedOrder) => void;
   resetCheckedOrders: () => void;
+  productNumbers: string[];
+  productNames: string[];
+  productColors: string[];
+  setProducts: (products: OrderDetail[]) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -45,39 +52,66 @@ export const useStore = create<Store>((set) => ({
     orderNumber: "",
     topicName: "",
     desiredDeliveryOn: "",
-    contents: []
+    contents: [],
   },
-  setCartContents: (orderInputs) => set((state) => {
-    const array = { ...state.carts, ...orderInputs };
-    return { carts: array };
-  }),
-  setCartOthers: (other) => set((state) => {
-    const array = { ...state.carts, [other.name]: other.value };
-    return { carts: array };
-  }),
-  resetCarts: () => set({
-    carts: {
-      shippingAddress: 0,
-      sample: false,
-      orderNumber: "",
-      topicName: "",
-      desiredDeliveryOn: "",
-      contents: []
-    },
-  }),
+  setCartContents: (orderInputs) =>
+    set((state) => {
+      const array = { ...state.carts, ...orderInputs };
+      return { carts: array };
+    }),
+  setCartOthers: (other) =>
+    set((state) => {
+      const array = { ...state.carts, [other.name]: other.value };
+      return { carts: array };
+    }),
+  resetCarts: () =>
+    set({
+      carts: {
+        shippingAddress: 0,
+        sample: false,
+        orderNumber: "",
+        topicName: "",
+        desiredDeliveryOn: "",
+        contents: [],
+      },
+    }),
   checkedOrders: [],
-  setCheckedOrders: (checkedOrders) => set((state) => {
-    const array = [...state.checkedOrders, ...checkedOrders];
-    return {
-      checkedOrders: array
-    };
-  }),
+  setCheckedOrders: (checkedOrders) =>
+    set((state) => {
+      const array = [...state.checkedOrders, ...checkedOrders];
+      return {
+        checkedOrders: array,
+      };
+    }),
 
-  removeCheckedOrders: (checkedOrder) => set((state) => {
-    const array = state.checkedOrders.filter((order) => order.id !== checkedOrder.id);
-    return {
-      checkedOrders: array
-    };
-  }),
-  resetCheckedOrders: () => set({ checkedOrders: [] })
+  removeCheckedOrders: (checkedOrder) =>
+    set((state) => {
+      const array = state.checkedOrders.filter(
+        (order) => order.id !== checkedOrder.id
+      );
+      return {
+        checkedOrders: array,
+      };
+    }),
+  resetCheckedOrders: () => set({ checkedOrders: [] }),
+  productNumbers: [],
+  productNames: [],
+  productColors: [],
+  setProducts: (products) =>
+    set(() => {
+      const productNumbers = products.map((product) => product.product_number);
+      const setProductNumbers = new Set(productNumbers);
+      const newProductNumbers = Array.from(setProductNumbers).sort();
+      const productNames = products.map((product) => product.product_name);
+      const setProducNames = new Set(productNames);
+      const newProducNames = Array.from(setProducNames).sort();
+      const productColors = products.map((product) => product.color);
+      const setProductColors = new Set(productColors);
+      const newProductColors = Array.from(setProductColors).sort();
+      return {
+        productNumbers: newProductNumbers,
+        productNames: newProducNames,
+        productColors: newProductColors,
+      };
+    }),
 }));

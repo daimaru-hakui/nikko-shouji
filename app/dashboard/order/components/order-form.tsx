@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { FC, useEffect } from "react";
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Button } from "@material-tailwind/react";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -11,9 +11,16 @@ import { useStore } from "@/store";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import OrderCompletion from "./order-completion";
 import { useRouter } from "next/navigation";
+import { Database } from "@/schema";
 
+type Product = Database["public"]["Tables"]["order_details"]["Row"];
 
-const OrderForm = () => {
+interface Props {
+  products: Product[];
+}
+
+const OrderForm: FC<Props> = ({ products }) => {
+  const setProducts = useStore((state) => state.setProducts);
   const router = useRouter();
   const supabase = createClientComponentClient();
   const carts = useStore((state) => state.carts);
@@ -77,9 +84,9 @@ const OrderForm = () => {
       .insert({
         shipping_address_id: Number(carts.shippingAddress),
         desired_delivery_on: carts.desiredDeliveryOn,
-        order_number: carts.orderNumber.trim(),
+        order_number: carts.orderNumber.trim().slice(0, 30),
         sample: carts.sample,
-        topic_name: carts.topicName.trim()
+        topic_name: carts.topicName.trim().slice(0, 30),
       })
       .select("id")
       .single();
@@ -94,23 +101,18 @@ const OrderForm = () => {
   };
 
   const createDetails = async (carts: Carts, id: number) => {
-    const array = carts.contents.map((content) => (
-      {
-        order_history_id: id,
-        product_number: content.productNumber.trim(),
-        product_name: content.productName.trim(),
-        color: content.color.trim(),
-        size: content.size.trim() || "",
-        quantity: Number(content.quantity),
-        order_quantity: Number(content.quantity),
-        comment: content.comment.trim() || ""
-      }
-    ));
-    const { error } = await supabase
-      .from("order_details")
-      .insert(
-        [...array]
-      );
+    const array = carts.contents.map((content) => ({
+      order_history_id: id,
+      maker: content.maker,
+      product_number: content.productNumber.trim(),
+      product_name: content.productName.trim(),
+      color: content.color.trim(),
+      size: content.size.trim() || "",
+      quantity: Number(content.quantity),
+      order_quantity: Number(content.quantity),
+      comment: content.comment.trim() || "",
+    }));
+    const { error } = await supabase.from("order_details").insert([...array]);
     if (error) {
       alert(error.message);
       console.log(error);
@@ -140,8 +142,12 @@ const OrderForm = () => {
       case 3:
         setActiveStep(0);
         return;
-    };
+    }
   };
+
+  useEffect(() => {
+    setProducts(products);
+  }, [products, setProducts]);
 
   return (
     <>
@@ -153,26 +159,22 @@ const OrderForm = () => {
       <form className="mt-12" onSubmit={handleSubmit(onSubmit)}>
         {activeStep === 0 && (
           <div className="overflow-auto max-h-[calc(100vh-220px)] p-3">
-            <OrderContentTable methods={methods} fields={fields} remove={remove} />
+            <OrderContentTable
+              methods={methods}
+              fields={fields}
+              remove={remove}
+            />
           </div>
         )}
-        {activeStep === 1 && (
-          <OrderShipping />
-        )}
-        {activeStep === 2 && (
-          <OrderConfirm />
-        )}
-        {activeStep === 3 && (
-          <OrderCompletion />
-        )}
+        {activeStep === 1 && <OrderShipping />}
+        {activeStep === 2 && <OrderConfirm />}
+        {activeStep === 3 && <OrderCompletion />}
 
         {activeStep === 0 && (
           <div className="w-full mt-3 flex justify-center gap-3">
-            <Button
-              className="flex items-center gap-3"
-              onClick={addTableRow}
-            >
-              <AiOutlinePlus />追加
+            <Button className="flex items-center gap-3" onClick={addTableRow}>
+              <AiOutlinePlus />
+              追加
             </Button>
           </div>
         )}
@@ -182,24 +184,22 @@ const OrderForm = () => {
             type="button"
             variant="outlined"
             className="w-full max-w-xs"
-            onClick={onClickReturnButton}>
-            {activeStep === 0 ?
-              "クリア" :
-              (activeStep === 1 || activeStep === 2 ?
-                "戻る" :
-                "発注画面")}
+            onClick={onClickReturnButton}
+          >
+            {activeStep === 0
+              ? "クリア"
+              : activeStep === 1 || activeStep === 2
+              ? "戻る"
+              : "発注画面"}
           </Button>
 
           {activeStep === 0 && (
-            <Button
-              type="submit"
-              className="w-full max-w-xs"
-            >
+            <Button type="submit" className="w-full max-w-xs">
               次へ進む
             </Button>
           )}
 
-          {(activeStep === 1) && (
+          {activeStep === 1 && (
             <Button
               type="button"
               className="w-full max-w-xs"

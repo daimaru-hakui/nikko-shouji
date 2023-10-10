@@ -27,15 +27,15 @@ const ShippingScheduleModal = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
-
-  const StyleTableTh = "border-b border-blue-gray-100 bg-blue-gray-50 px-2 py-1 text-left";
+  const StyleTableTh =
+    "border-b border-blue-gray-100 bg-blue-gray-50 px-2 py-1 text-left";
   const StyleTableTd = "px-2 py-1 text-left text-black border-b";
   const inputStyle =
     "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
 
   return (
     <>
-      <div className='mt-3 flex items-center h-[calc(60px)]'>
+      <div className="mt-3 flex items-center h-[calc(60px)]">
         {checkedOrders.length > 0 && (
           <Button onClick={handleOpen} variant="gradient">
             出荷処理
@@ -45,7 +45,11 @@ const ShippingScheduleModal = () => {
       <Dialog open={open} handler={handleOpen} size="xl">
         <DialogHeader className="flex justify-between">
           出荷処理
-          <AiOutlineClose onClick={() => setOpen(false)} className="cursor-pointer" />
+          <button>
+            <AiOutlineClose
+              onClick={() => setOpen(false)}
+            />
+          </button>
         </DialogHeader>
         <DialogBody className="pt-0 ">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,8 +59,11 @@ const ShippingScheduleModal = () => {
                 <select
                   // style={{ padding: "0.8rem" }}
                   className={`${inputStyle} h-10 py-1 px-2 w-full max-w-[calc(200px)]`}
-                  defaultValue={checkedOrders[0]?.order_histories?.shipping_addresses?.customer}
-                // {...register(`contents.${idx}.maker`)}
+                  defaultValue={
+                    checkedOrders[0]?.order_histories?.shipping_addresses
+                      ?.customer
+                  }
+                  // {...register(`contents.${idx}.maker`)}
                 >
                   <option>来店</option>
                   <option>日紅商事株式会社</option>
@@ -92,13 +99,27 @@ const ShippingScheduleModal = () => {
                   {checkedOrders.map((checkedOrder) => (
                     <tr key={checkedOrder.id}>
                       <td className={`${StyleTableTd}`}>{checkedOrder.id}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.order_histories?.order_number}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.maker}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.product_number}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.product_name}</td>
-                      <td className={`${StyleTableTd}`}>{checkedOrder.color}</td>
-                      <td className={`${StyleTableTd} text-center`}>{checkedOrder.size}</td>
-                      <td className={`${StyleTableTd} text-center`}>{checkedOrder.quantity}</td>
+                      <td className={`${StyleTableTd}`}>
+                        {checkedOrder.order_histories?.order_number}
+                      </td>
+                      <td className={`${StyleTableTd}`}>
+                        {checkedOrder.maker}
+                      </td>
+                      <td className={`${StyleTableTd}`}>
+                        {checkedOrder.product_number}
+                      </td>
+                      <td className={`${StyleTableTd}`}>
+                        {checkedOrder.product_name}
+                      </td>
+                      <td className={`${StyleTableTd}`}>
+                        {checkedOrder.color}
+                      </td>
+                      <td className={`${StyleTableTd} text-center`}>
+                        {checkedOrder.size}
+                      </td>
+                      <td className={`${StyleTableTd} text-center`}>
+                        {checkedOrder.quantity}
+                      </td>
                       <td className={`${StyleTableTd}`}>
                         <input
                           type="number"
@@ -112,7 +133,10 @@ const ShippingScheduleModal = () => {
                         />
                       </td>
                       <td className={`${StyleTableTd} text-left`}>
-                        {checkedOrder.order_histories?.shipping_addresses?.customer}
+                        {
+                          checkedOrder.order_histories?.shipping_addresses
+                            ?.customer
+                        }
                       </td>
                     </tr>
                   ))}
@@ -122,15 +146,11 @@ const ShippingScheduleModal = () => {
           </form>
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            onClick={handleOpen}
-            className="mr-1"
-          >
+          <Button variant="text" onClick={handleOpen} className="mr-1">
             <span>閉じる</span>
           </Button>
-        </DialogFooter >
-      </Dialog >
+        </DialogFooter>
+      </Dialog>
     </>
   );
 };

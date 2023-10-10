@@ -18,11 +18,14 @@ const OrderShippingAddressModal = () => {
   const [addresses, setAddresses] = useState<ShippingAdress[]>([]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
-  const StyleTableTh = "border-b border-blue-gray-100 bg-blue-gray-50 p-4 text-left";
+  const StyleTableTh =
+    "border-b border-blue-gray-100 bg-blue-gray-50 p-4 text-left";
 
   useEffect(() => {
     const getShippingAddress = async () => {
-      const { data, error } = await supabase.from("shipping_addresses").select("*");
+      const { data, error } = await supabase
+        .from("shipping_addresses")
+        .select("*");
       if (!data) return;
       setAddresses(data);
     };
@@ -37,7 +40,9 @@ const OrderShippingAddressModal = () => {
       <Dialog open={open} handler={handleOpen} size="lg">
         <DialogHeader className="flex justify-between">
           お届け先を選択
-          <AiOutlineClose onClick={handleOpen} className="cursor-pointer" />
+          <button>
+            <AiOutlineClose onClick={handleOpen} />
+          </button>
         </DialogHeader>
         <DialogBody className="h-[30rem] overflow-auto">
           <table className="w-full">
@@ -61,15 +66,11 @@ const OrderShippingAddressModal = () => {
           </table>
         </DialogBody>
         <DialogFooter>
-          <Button
-            variant="text"
-            onClick={handleOpen}
-            className="mr-1"
-          >
+          <Button variant="text" onClick={handleOpen} className="mr-1">
             <span>閉じる</span>
           </Button>
-        </DialogFooter >
-      </Dialog >
+        </DialogFooter>
+      </Dialog>
     </>
   );
 };
