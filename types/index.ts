@@ -28,3 +28,14 @@ type Carts = {
     comment: string;
   }[];
 };
+
+type ShippingScheduleInputs = {
+  shippingDate: string;
+  contents: {
+    order_detail_id: number;
+    quantity: number;
+    remainingQuantity: number;
+    shippingAddress: number;
+    comment: string;
+  }[];
+}
