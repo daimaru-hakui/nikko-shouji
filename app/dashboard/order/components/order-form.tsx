@@ -39,7 +39,7 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
       contents: [
         {
           supplierId: "",
-          supplierName:"",
+          supplierName: "",
           productNumber: "",
           productName: "",
           color: "",
@@ -51,16 +51,28 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
     },
   });
 
-  const { control, handleSubmit, setValue, reset } = methods;
+  const { control, handleSubmit,  reset } = methods;
   const { append, fields, remove } = useFieldArray({
     control,
     name: "contents",
   });
+  useEffect(() => {
+    const getHistory = async()=>{
+      const res = await fetch("/api/orderHistories", {
+        method: "get",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+    }
+    getHistory()
+  }, []);
 
   const addTableRow = () => {
     append({
       supplierId: "",
-      supplierName:"",
+      supplierName: "",
       productNumber: "",
       productName: "",
       color: "",
@@ -154,9 +166,9 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
     setProducts(products);
   }, [products, setProducts]);
 
-  useEffect(()=>{
-    setSuppliers(suppliers)
-  },[suppliers,setSuppliers])
+  useEffect(() => {
+    setSuppliers(suppliers);
+  }, [suppliers, setSuppliers]);
 
   return (
     <>

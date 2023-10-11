@@ -2,10 +2,11 @@
 import React, { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import DrawerSidebar from "@/app/components/drawer-sidebar";
-import Sidebar from "../components/sidebar";
+import Sidebar from "@/components/sidebar";
 import { useStore } from "@/store";
-import Navbar from "../components/nav-bar";
+import Navbar from "@/components/nav-bar";
 import "../globals.css";
+import { DefaultSpinner } from "@/components/default-spinner";
 
 const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
   const supabase = createClientComponentClient();
@@ -26,6 +27,7 @@ const Dashboardlayout = ({ children }: { children: React.ReactNode }) => {
   console.log("dashboard");
   return (
     <>
+      <DefaultSpinner />
       <div
         style={{ transition: "0.2s" }}
         className={`${isSidebar ? "sidebarTwoColumn" : "sidebarOneColumn"} `}

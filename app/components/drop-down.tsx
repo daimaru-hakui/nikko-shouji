@@ -1,19 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { BiMenu } from "react-icons/bi";
 
 const DropDown = () => {
+  const router = useRouter();
   const [toggle, setToggle] = useState(false);
   const handleToggleClick = () => {
     setToggle(!toggle);
   };
-  const supabase = createClientComponentClient();
-  const router = useRouter();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    await fetch("/auth/logout", { method: "post" });
     router.refresh();
   };
 

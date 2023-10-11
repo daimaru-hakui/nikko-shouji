@@ -1,8 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
-const LoginLayout = ({ children }: { children: ReactNode; }) => {
+const LoginLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className='w-full h-screen flex justify-center items-center'>{children}</div>
+    <div className="w-full h-screen flex justify-center items-center">
+      {children}
+    </div>
   );
 };
 

@@ -1,9 +1,9 @@
-import { Checkbox } from '@material-tailwind/react';
 import React, { FC, useEffect, useState } from 'react';
-import OrderShippingAddressModal from './order-shipping-address-modal';
+import { Checkbox } from '@material-tailwind/react';
 import { useStore } from '@/store';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/schema';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import OrderShippingAddressModal from './order-shipping-address-modal';
 
 type ShippingAdress = Database["public"]["Tables"]["shipping_addresses"]["Row"];
 

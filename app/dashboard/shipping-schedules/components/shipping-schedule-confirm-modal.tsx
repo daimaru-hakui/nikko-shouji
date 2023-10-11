@@ -59,20 +59,6 @@ const ShippingScheduleConfirmModal = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex gap-3">
               <div className="flex flex-col">
-                <label className="mb-1 text-xs">お届け先</label>
-                <select
-                  className={`${inputStyle} h-10 py-1 px-2 w-full max-w-[calc(200px)]`}
-                  defaultValue={
-                    checkedOrders[0]?.order_histories?.shipping_addresses
-                      ?.customer
-                  }
-                  // {...register(`contents.${idx}.maker`)}
-                >
-                  <option>来店</option>
-                  <option>日紅商事株式会社</option>
-                </select>
-              </div>
-              <div className="flex flex-col">
                 <label className="mb-1 text-xs">出荷日</label>
                 <input
                   type="date"
@@ -87,7 +73,7 @@ const ShippingScheduleConfirmModal = () => {
                   <ShippingScheduleConfirmTableHead />
                 </thead>
                 <tbody>
-                  {checkedOrders.map((checkedOrder) => (
+                  {checkedOrders.map((checkedOrder,idx) => (
                     <ShippingScheduleConfirmTableRow
                       key={checkedOrder.id}
                       checkedOrder={checkedOrder}
