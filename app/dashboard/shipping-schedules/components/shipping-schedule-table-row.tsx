@@ -48,7 +48,13 @@ const ShippingScheduleTableRow: FC<Props> = ({
 
   const StyleTableTd = "py-0.5 px-1 text-left border-b";
   return (
-    <tr key={shippingSchedule.id}>
+    <tr
+      key={shippingSchedule.id}
+      style={{
+        backgroundColor:
+          shippingSchedule.order_histories?.order_status === "CANCEL" ? "#ccc" : ""
+      }}
+    >
       {currentUser?.role === "admin" && (
         <td className={`${StyleTableTd}`}>
           <Checkbox

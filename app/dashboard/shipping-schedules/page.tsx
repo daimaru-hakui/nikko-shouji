@@ -11,7 +11,8 @@ const ShippingSchedules: NextPage = async () => {
   const getShippingSchedules = async () => {
     const { data, error } = await supabase
       .from("order_details")
-      .select(`*,order_histories(*,shipping_addresses(*)),suppliers(*)`).order("id", { ascending: false });
+      .select(`*,order_histories(*,shipping_addresses(*)),suppliers(*)`)
+      .order("id", { ascending: false });
     if (error) {
       alert(error.message);
     }
@@ -36,7 +37,7 @@ const ShippingSchedules: NextPage = async () => {
     <div className="w-full max-w-[calc(1500px)] mx-auto">
       <h1 className="mt-6 text-3xl font-bold">出荷予定（発注残）</h1>
       <ShippingScheduleConfirmModal />
-      <ShippingScheduleTable shippingSchedules={shippingSchedules} userId={userId}/>
+      <ShippingScheduleTable shippingSchedules={shippingSchedules} userId={userId} />
     </div>
   );
 };

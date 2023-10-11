@@ -13,28 +13,48 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { format } from "date-fns";
 import ShippingScheduleConfirmTableHead from "./shipping-schedule-confirm-table-head";
 import ShippingScheduleConfirmTableRow from "./shipping-schedule-confirm-table-row";
-
-type Inputs = {
-  shippingDate: string;
-  contents: {
-    order_detail_id: number;
-    quantity: number;
-    remainingQuantity: number;
-    shippingAddress: number;
-    comment: string;
-  }[];
-};
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 
 const ShippingScheduleConfirmModal = () => {
+  const router = useRouter();
   const checkedOrders = useStore((state) => state.checkedOrders);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
+  const supabase = createClientComponentClient();
 
-  const methods = useForm<Inputs>();
-  const { handleSubmit } = methods;
+  const methods = useForm<ShippingScheduleInputs>();
+  const { handleSubmit, reset } = methods;
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const inputReset = () => {
+    setOpen(false);
+    reset();
+  };
+
+  const onSubmit: SubmitHandler<ShippingScheduleInputs> = async (data) => {
+    await confirmHandler(data);
+    inputReset();
+    router.refresh();
+  };
+
+  const confirmHandler = async (data: ShippingScheduleInputs) => {
+    if (!data) return;
+    const contents = data.contents?.map((content) => (
+      {
+        id: content.order_detail_id,
+        quantity: content.remainingQuantity
+      }
+    ));
+    contents?.forEach(async (content) => {
+      const { error } = await supabase
+        .from("order_details")
+        .update({ quantity: content.quantity })
+        .eq("id", content.id)
+        .select("*");
+      console.log(error?.message);
+    });
+  };
 
   const inputStyle =
     "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
@@ -48,15 +68,15 @@ const ShippingScheduleConfirmModal = () => {
           </Button>
         )}
       </div>
-      <Dialog open={open} handler={handleOpen} size="xl">
-        <DialogHeader className="flex justify-between">
-          出荷処理
-          <button>
-            <AiOutlineClose onClick={() => setOpen(false)} />
-          </button>
-        </DialogHeader>
-        <DialogBody className="pt-0 ">
-          <form onSubmit={handleSubmit(onSubmit)}>
+      <Dialog open={open} handler={inputReset} size="xl">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader className="flex justify-between">
+            出荷処理
+            <button>
+              <AiOutlineClose onClick={inputReset} />
+            </button>
+          </DialogHeader>
+          <DialogBody className="pt-0 ">
             <div className="flex gap-3">
               <div className="flex flex-col">
                 <label className="mb-1 text-xs">出荷日</label>
@@ -73,7 +93,7 @@ const ShippingScheduleConfirmModal = () => {
                   <ShippingScheduleConfirmTableHead />
                 </thead>
                 <tbody>
-                  {checkedOrders.map((checkedOrder,idx) => (
+                  {checkedOrders.map((checkedOrder, idx) => (
                     <ShippingScheduleConfirmTableRow
                       key={checkedOrder.id}
                       checkedOrder={checkedOrder}
@@ -84,13 +104,16 @@ const ShippingScheduleConfirmModal = () => {
                 </tbody>
               </table>
             </div>
-          </form>
-        </DialogBody>
-        <DialogFooter>
-          <Button variant="text" onClick={handleOpen} className="mr-1">
-            <span>閉じる</span>
-          </Button>
-        </DialogFooter>
+          </DialogBody>
+          <DialogFooter className="flex gap-3">
+            <Button variant="text" onClick={inputReset} className="mr-1">
+              <span>閉じる</span>
+            </Button>
+            <Button type="submit" className="mr-1">
+              <span>登録</span>
+            </Button>
+          </DialogFooter>
+        </form>
       </Dialog>
     </>
   );

@@ -3,19 +3,8 @@ import React, { FC } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { BsTrash } from "react-icons/bs";
 
-type Inputs = {
-    shippingDate: string;
-    contents: {
-      order_detail_id: number;
-      quantity: number;
-      remainingQuantity: number;
-      shippingAddress: number;
-      comment: string;
-    }[];
-  };
-
 interface Props {
-  methods: UseFormReturn<Inputs, any, undefined>;
+  methods: UseFormReturn<ShippingScheduleInputs, any, undefined>;
   checkedOrder: CheckedOrder;
   idx: number;
 }
