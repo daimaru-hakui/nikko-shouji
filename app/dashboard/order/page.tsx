@@ -19,13 +19,27 @@ const OrderOage = async () => {
     return data;
   };
 
-  const products = await getProducts()
-  if(!products) return
+  const getSuppliers = async () => {
+    const { data, error } = await supabase
+      .from("suppliers")
+      .select("*")
+      .order("order", { ascending: true });
+    if (error) {
+      console.log(error.message);
+    }
+    if (!data) return;
+    return data;
+  };
+
+  const products = await getProducts();
+  const suppliers = await getSuppliers();
+  if (!products) return;
+  if (!suppliers) return;
 
   return (
     <div className="w-full max-w-[calc(1500px)]">
       <h1 className="mt-6 text-3xl font-bold">Order</h1>
-      <OrderForm products={products} />
+      <OrderForm products={products} suppliers={suppliers} />
     </div>
   );
 };

@@ -10,11 +10,16 @@ import { useStore } from "@/store";
 
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
+type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
+interface OrderDetailSupllier extends OrderDetail {
+  suppliers:Supplier | null
+}
+
 interface Order extends OrderHistory {
-  order_details: OrderDetail[] | null;
+  order_details: OrderDetailSupllier[] | null;
   shipping_addresses: ShippingAddress | null;
 }
 

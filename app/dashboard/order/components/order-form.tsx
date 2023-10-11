@@ -14,15 +14,18 @@ import { useRouter } from "next/navigation";
 import { Database } from "@/schema";
 
 type Product = Database["public"]["Tables"]["order_details"]["Row"];
+type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 
 interface Props {
   products: Product[];
+  suppliers: Supplier[];
 }
 
-const OrderForm: FC<Props> = ({ products }) => {
+const OrderForm: FC<Props> = ({ products, suppliers }) => {
   const router = useRouter();
   const supabase = createClientComponentClient();
   const setProducts = useStore((state) => state.setProducts);
+  const setSuppliers = useStore((state) => state.setSuppliers);
   const carts = useStore((state) => state.carts);
   const resetCarts = useStore((state) => state.resetCarts);
   const setCartContents = useStore((state) => state.setCartContents);
@@ -35,7 +38,8 @@ const OrderForm: FC<Props> = ({ products }) => {
     defaultValues: {
       contents: [
         {
-          maker: "",
+          supplierId: "",
+          supplierName:"",
           productNumber: "",
           productName: "",
           color: "",
@@ -55,7 +59,8 @@ const OrderForm: FC<Props> = ({ products }) => {
 
   const addTableRow = () => {
     append({
-      maker: "",
+      supplierId: "",
+      supplierName:"",
       productNumber: "",
       productName: "",
       color: "",
@@ -103,7 +108,7 @@ const OrderForm: FC<Props> = ({ products }) => {
   const createDetails = async (carts: Carts, id: number) => {
     const array = carts.contents.map((content) => ({
       order_history_id: id,
-      maker: content.maker,
+      supplier_id: Number(content.supplierId),
       product_number: content.productNumber.trim(),
       product_name: content.productName.trim(),
       color: content.color.trim(),
@@ -148,6 +153,10 @@ const OrderForm: FC<Props> = ({ products }) => {
   useEffect(() => {
     setProducts(products);
   }, [products, setProducts]);
+
+  useEffect(()=>{
+    setSuppliers(suppliers)
+  },[suppliers,setSuppliers])
 
   return (
     <>

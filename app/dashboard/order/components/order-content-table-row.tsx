@@ -1,6 +1,5 @@
 import { useStore } from "@/store";
-import { makerList } from "@/utils/makerList";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
 import { CgCopy } from "react-icons/cg";
@@ -29,7 +28,16 @@ const OrderContentTableRow: FC<Props> = ({
   const productNumbers = useStore((state) => state.productNumbers);
   const productNames = useStore((state) => state.productNames);
   const productColors = useStore((state) => state.productColors);
-
+  const suppliers = useStore((state) => state.suppliers);
+  const supplierId = watch(`contents.${idx}.supplierId`);
+  const supplier = suppliers.find((supplier) => supplier.id === +supplierId);
+  
+  useEffect(() => {
+    if (supplier) {
+      setValue(`contents.${idx}.supplierName`, supplier?.name);
+    }
+  }, [idx,setValue,supplier]);
+  
   const copyRow = (idx: number) => {
     const contetns = getValues("contents");
     const obj = contetns[idx];
@@ -65,14 +73,19 @@ const OrderContentTableRow: FC<Props> = ({
           style={{ padding: "0.8rem" }}
           className={`${inputStyle} `}
           defaultValue=""
-          {...register(`contents.${idx}.maker`)}
+          {...register(`contents.${idx}.supplierId`)}
         >
-          {makerList.map((value) => (
-            <option key={value} value={value}>
-              {value}
+          <option value="99">選択してください</option>
+          {suppliers.map(({ id, name }) => (
+            <option key={id} value={id}>
+              {name}
             </option>
           ))}
         </select>
+        <input
+          className="hidden"
+          {...register(`contents.${idx}.supplierName`)}
+        />
       </td>
       <td>
         <input

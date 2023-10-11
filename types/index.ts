@@ -1,6 +1,7 @@
 type OrderInputs = {
   contents: {
-    maker: string;
+    supplierId: string;
+    supplierName:string;
     productNumber: string;
     productName: string;
     color: string;
@@ -17,7 +18,8 @@ type Carts = {
   orderNumber: string;
   topicName: string;
   contents: {
-    maker: string;
+    supplierId: string;
+    supplierName:string;
     productNumber: string;
     productName: string;
     color: string;

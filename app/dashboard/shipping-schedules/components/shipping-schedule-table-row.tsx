@@ -7,6 +7,7 @@ import React, { FC, useEffect, useState } from "react";
 
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
+type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
@@ -16,6 +17,7 @@ interface order extends OrderHistory {
 
 interface ShippingSchedule extends OrderDetail {
   order_histories: order | null;
+  suppliers: Supplier | null;
 }
 
 interface Props {
@@ -75,7 +77,7 @@ const ShippingScheduleTableRow: FC<Props> = ({
             "yyyy年MM月dd日"
           )}
       </td>
-      <td className={`${StyleTableTd}`}>{shippingSchedule.maker}</td>
+      <td className={`${StyleTableTd}`}>{shippingSchedule.suppliers?.name}</td>
       <td className={`${StyleTableTd}`}>{shippingSchedule.product_number}</td>
       <td className={`${StyleTableTd}`}>{shippingSchedule?.product_name}</td>
       <td className={`${StyleTableTd}`}>{shippingSchedule?.color}</td>

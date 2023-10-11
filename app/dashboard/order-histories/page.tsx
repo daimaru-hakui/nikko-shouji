@@ -10,7 +10,7 @@ const OrderHistories: NextPage = async () => {
   const getOrders = async () => {
     const { data, error } = await supabase
       .from("order_histories")
-      .select(`*,order_details(*),shipping_addresses(*)`)
+      .select(`*,order_details(*,suppliers(*)),shipping_addresses(*)`)
       .order("id", { ascending: false });
     if (error) {
       alert(error.message);

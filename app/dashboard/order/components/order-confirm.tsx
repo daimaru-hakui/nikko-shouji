@@ -48,7 +48,7 @@ const OrderConfirm: FC = () => {
             {carts.contents.map((content, idx) => (
               <tr key={idx}>
                 <td className={`${StyleTableTd}`}>{idx + 1}</td>
-                <td className={`${StyleTableTd}`}>{content.maker}</td>
+                <td className={`${StyleTableTd}`}>{content.supplierName}</td>
                 <td className={`${StyleTableTd}`}>{content.productNumber}</td>
                 <td className={`${StyleTableTd}`}>{content.productName}</td>
                 <td className={`${StyleTableTd}`}>{content.color}</td>

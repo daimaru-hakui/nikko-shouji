@@ -8,6 +8,7 @@ import useAuth from "@/hooks/useAuth";
 
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
+type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
@@ -17,6 +18,7 @@ interface Order extends OrderHistory {
 
 interface ShippingSchedule extends OrderDetail {
   order_histories: Order | null;
+  suppliers:Supplier | null;
 }
 
 interface Props {
