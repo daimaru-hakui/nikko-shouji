@@ -26,12 +26,11 @@ const ShippingSchedules: NextPage = async () => {
     return session?.user.id;
   };
 
-
   const shippingSchedules = await getShippingSchedules();
-  const userId = await getUserId()
+  const userId = await getUserId();
 
   if (!shippingSchedules) return;
-  if(!userId) return
+  if (!userId) return;
 
   return (
     <div className="w-full max-w-[calc(1500px)] mx-auto">

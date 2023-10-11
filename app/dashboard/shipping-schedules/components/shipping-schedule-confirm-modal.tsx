@@ -25,18 +25,14 @@ type Inputs = {
   }[];
 };
 
+
 const ShippingScheduleConfirmModal = () => {
   const checkedOrders = useStore((state) => state.checkedOrders);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
 
-  const resetClose = () => {
-    setOpen(false);
-    reset();
-  };
-
   const methods = useForm<Inputs>();
-  const { handleSubmit,reset } = methods;
+  const { handleSubmit } = methods;
 
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
@@ -52,11 +48,11 @@ const ShippingScheduleConfirmModal = () => {
           </Button>
         )}
       </div>
-      <Dialog open={open} handler={resetClose} size="xl">
+      <Dialog open={open} handler={handleOpen} size="xl">
         <DialogHeader className="flex justify-between">
           出荷処理
           <button>
-            <AiOutlineClose onClick={resetClose} />
+            <AiOutlineClose onClick={() => setOpen(false)} />
           </button>
         </DialogHeader>
         <DialogBody className="pt-0 ">
@@ -91,7 +87,7 @@ const ShippingScheduleConfirmModal = () => {
                   <ShippingScheduleConfirmTableHead />
                 </thead>
                 <tbody>
-                  {checkedOrders.map((checkedOrder, idx) => (
+                  {checkedOrders.map((checkedOrder) => (
                     <ShippingScheduleConfirmTableRow
                       key={checkedOrder.id}
                       checkedOrder={checkedOrder}
@@ -105,7 +101,7 @@ const ShippingScheduleConfirmModal = () => {
           </form>
         </DialogBody>
         <DialogFooter>
-          <Button variant="text" onClick={resetClose} className="mr-1">
+          <Button variant="text" onClick={handleOpen} className="mr-1">
             <span>閉じる</span>
           </Button>
         </DialogFooter>

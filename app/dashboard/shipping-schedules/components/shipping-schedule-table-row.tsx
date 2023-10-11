@@ -1,4 +1,3 @@
-import useAuth from "@/hooks/useAuth";
 import { Database } from "@/schema";
 import { useStore } from "@/store";
 import { Checkbox } from "@material-tailwind/react";

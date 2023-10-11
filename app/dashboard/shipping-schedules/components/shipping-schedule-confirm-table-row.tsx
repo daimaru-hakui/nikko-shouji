@@ -52,7 +52,9 @@ const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx
         {checkedOrder.order_histories?.order_number}
       </td>
       <td className={`${StyleTableTd}`}>
+
         {checkedOrder.suppliers?.name}
+
       </td>
       <td className={`${StyleTableTd}`}>
         {checkedOrder.product_number}
