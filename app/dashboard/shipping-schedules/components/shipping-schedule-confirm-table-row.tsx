@@ -79,7 +79,7 @@ const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx
         <select
           className={`${inputStyle} h-10 py-1 px-2 w-full max-w-[calc(200px)]`}
           defaultValue={
-            checkedOrders[0]?.order_histories?.shipping_addresses
+            checkedOrder?.order_histories?.shipping_addresses
               ?.customer
           }
           {...register(`contents.${idx}.shippingAddress`)}

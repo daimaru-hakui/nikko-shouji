@@ -12,6 +12,7 @@ const ShippingSchedules: NextPage = async () => {
     const { data, error } = await supabase
       .from("order_details")
       .select(`*,order_histories(*,shipping_addresses(*)),suppliers(*)`)
+      .gt("quantity", 0)
       .order("id", { ascending: false });
     if (error) {
       alert(error.message);
