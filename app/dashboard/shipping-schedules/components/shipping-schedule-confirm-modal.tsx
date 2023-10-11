@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 const ShippingScheduleConfirmModal = () => {
   const router = useRouter();
   const checkedOrders = useStore((state) => state.checkedOrders);
+  const resetCheckedOrders = useStore((state) => state.resetCheckedOrders);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
   const supabase = createClientComponentClient();
@@ -33,27 +34,39 @@ const ShippingScheduleConfirmModal = () => {
   };
 
   const onSubmit: SubmitHandler<ShippingScheduleInputs> = async (data) => {
-    await confirmHandler(data);
+    // await createShippingHistory(data);
+    await updateShippingSchedule(data);
     inputReset();
     router.refresh();
   };
 
-  const confirmHandler = async (data: ShippingScheduleInputs) => {
-    if (!data) return;
-    const contents = data.contents?.map((content) => (
+  const createShippingHistory = async (data: ShippingScheduleInputs) => {
+    const newContents = data.contents.map((content) => (
       {
-        id: content.order_detail_id,
-        quantity: content.remainingQuantity
+        shipping_date: data.shippingDate,
+        shippingAddress: content.shippingAddress,
+        order_detail_id: content.order_detail_id,
+        quantity: content.quantity,
+        comment: content.comment
       }
     ));
-    contents?.forEach(async (content) => {
+    const { error } = await supabase
+      .from("order_details")
+      .insert({ ...newContents })
+      .select("*");
+  };
+
+  const updateShippingSchedule = async (data: ShippingScheduleInputs) => {
+    if (!data) return;
+    data.contents?.forEach(async (content) => {
       const { error } = await supabase
         .from("order_details")
-        .update({ quantity: content.quantity })
-        .eq("id", content.id)
+        .update({ quantity: content.remainingQuantity })
+        .eq("id", content.order_detail_id)
         .select("*");
       console.log(error?.message);
     });
+    resetCheckedOrders();
   };
 
   const inputStyle =
