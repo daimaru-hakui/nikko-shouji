@@ -73,15 +73,6 @@ const ShippingScheduleTableRow: FC<Props> = ({
       <td className={`${StyleTableTd}`}>
         {format(new Date(shippingSchedule.created_at), "yyyy年MM月dd日")}
       </td>
-      <td className={`${StyleTableTd}`}>
-        {shippingSchedule?.order_histories?.desired_delivery_on &&
-          format(
-            new Date(
-              shippingSchedule?.order_histories?.desired_delivery_on.toString()
-            ),
-            "yyyy年MM月dd日"
-          )}
-      </td>
       <td className={`${StyleTableTd}`}>{shippingSchedule.suppliers?.name}</td>
       <td className={`${StyleTableTd}`}>{shippingSchedule.product_number}</td>
       <td className={`${StyleTableTd}`}>{shippingSchedule?.product_name}</td>
@@ -96,7 +87,7 @@ const ShippingScheduleTableRow: FC<Props> = ({
         {shippingSchedule.order_histories?.shipping_addresses?.name}
       </td>
       <td className={`${StyleTableTd}`}>
-        {shippingSchedule?.order_histories?.sample ? "サンプル" : "通常発注"}
+        {shippingSchedule?.order_histories?.processing ? "二次加工" : ""}
       </td>
       <td className={`${StyleTableTd}`}>{shippingSchedule?.comment}</td>
     </tr>

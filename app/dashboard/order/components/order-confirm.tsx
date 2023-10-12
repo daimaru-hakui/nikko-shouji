@@ -86,14 +86,6 @@ const OrderConfirm: FC = () => {
         <div className='p-3'>
           {carts.topicName}
         </div>
-        {carts.sample && (
-          <>
-            <div className='mt-12 font-bold'>サンプル</div>
-            <div className='p-3'>
-              サンプル提案分
-            </div>
-          </>
-        )}
       </div>
     </>
   );
