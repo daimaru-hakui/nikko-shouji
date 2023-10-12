@@ -66,7 +66,7 @@ const OrderConfirm: FC = () => {
         <div className='mt-3 p-6 border border-gray-900/10'>
           <div className='w-full flex flex-col md:flex-row justify-between'>
             <div>
-              <div>{shippingAddress?.customer}</div>
+              <div>{shippingAddress?.name}</div>
               <div className='flex gap-3'>
                 <div>{shippingAddress?.post_code}</div>
                 <div>{shippingAddress?.address}</div>

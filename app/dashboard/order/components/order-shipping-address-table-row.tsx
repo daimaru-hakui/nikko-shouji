@@ -25,7 +25,7 @@ const OrderShippingAddressTableRow: FC<Props> = ({ address, handleOpen }) => {
           選択
         </Button>
       </td>
-      <td className={`${StyleTableTd}`}>{address.customer}</td>
+      <td className={`${StyleTableTd}`}>{address.name}</td>
       <td className={`${StyleTableTd}`}>{address.post_code}
         <span className='ml-3'>{address.address}</span></td>
       <td className={`${StyleTableTd}`}>{address.tel}</td>

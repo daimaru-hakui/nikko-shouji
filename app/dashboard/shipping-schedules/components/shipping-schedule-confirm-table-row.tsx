@@ -1,17 +1,26 @@
-import { CheckedOrder, useStore } from '@/store';
-import React, { FC } from 'react';
-import { UseFormReturn, useFieldArray } from 'react-hook-form';
+import React, { FC } from "react";
+import { CheckedOrder, useStore } from "@/store";
+import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { BsTrash } from "react-icons/bs";
+import { Database } from "@/schema";
+
+type ShippingAddress =
+  Database["public"]["Tables"]["shipping_addresses"]["Row"];
 
 interface Props {
   methods: UseFormReturn<ShippingScheduleInputs, any, undefined>;
   checkedOrder: CheckedOrder;
+  shippingAddresses: ShippingAddress[];
   idx: number;
 }
 
-const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx }) => {
+const ShippingScheduleConfirmTableRow: FC<Props> = ({
+  methods,
+  checkedOrder,
+  shippingAddresses,
+  idx,
+}) => {
   const { register, watch, setValue, control } = methods;
-  const checkedOrders = useStore((state) => state.checkedOrders);
   const removeCheckedOrders = useStore((state) => state.removeCheckedOrders);
   const { remove } = useFieldArray({
     control,
@@ -21,8 +30,10 @@ const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx
   const orderDetailId = checkedOrder.id;
   setValue(`contents.${idx}.order_detail_id`, orderDetailId);
 
-  const quantity = checkedOrder.quantity - watch(`contents.${idx}.quantity`) >= 0 ?
-    checkedOrder.quantity - watch(`contents.${idx}.quantity`) : 0;
+  const quantity =
+    checkedOrder.quantity - watch(`contents.${idx}.quantity`) >= 0
+      ? checkedOrder.quantity - watch(`contents.${idx}.quantity`)
+      : 0;
   setValue(`contents.${idx}.remainingQuantity`, quantity);
 
   const handleRemoveCheckedOrder = () => {
@@ -40,26 +51,12 @@ const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx
       <td className={`${StyleTableTd}`}>
         {checkedOrder.order_histories?.order_number}
       </td>
-      <td className={`${StyleTableTd}`}>
-
-        {checkedOrder.suppliers?.name}
-
-      </td>
-      <td className={`${StyleTableTd}`}>
-        {checkedOrder.product_number}
-      </td>
-      <td className={`${StyleTableTd}`}>
-        {checkedOrder.product_name}
-      </td>
-      <td className={`${StyleTableTd}`}>
-        {checkedOrder.color}
-      </td>
-      <td className={`${StyleTableTd} text-center`}>
-        {checkedOrder.size}
-      </td>
-      <td className={`${StyleTableTd} text-center`}>
-        {checkedOrder.quantity}
-      </td>
+      <td className={`${StyleTableTd}`}>{checkedOrder.suppliers?.name}</td>
+      <td className={`${StyleTableTd}`}>{checkedOrder.product_number}</td>
+      <td className={`${StyleTableTd}`}>{checkedOrder.product_name}</td>
+      <td className={`${StyleTableTd}`}>{checkedOrder.color}</td>
+      <td className={`${StyleTableTd} text-center`}>{checkedOrder.size}</td>
+      <td className={`${StyleTableTd} text-center`}>{checkedOrder.quantity}</td>
       <td className={`${StyleTableTd} text-center`}>
         <input
           type="number"
@@ -78,18 +75,16 @@ const ShippingScheduleConfirmTableRow: FC<Props> = ({ methods, checkedOrder, idx
       <td className={`${StyleTableTd} text-left`}>
         <select
           className={`${inputStyle} h-10 py-1 px-2 w-full max-w-[calc(200px)]`}
-          defaultValue={
-            checkedOrder?.order_histories?.shipping_addresses
-              ?.customer
-          }
+          defaultValue={checkedOrder?.order_histories?.shipping_addresses?.id}
           {...register(`contents.${idx}.shippingAddress`)}
         >
-          <option>来店</option>
-          <option>日紅商事株式会社</option>
+          {shippingAddresses.map((address) => (
+            <option key={address.id} value={address.id}>{address.name}</option>
+          ))}
         </select>
       </td>
       <td className={`${StyleTableTd}`}>
-        <div className='flex justify-center cursor-pointer'>
+        <div className="flex justify-center cursor-pointer">
           <BsTrash onClick={handleRemoveCheckedOrder} />
         </div>
       </td>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -15,17 +15,24 @@ import ShippingScheduleConfirmTableHead from "./shipping-schedule-confirm-table-
 import ShippingScheduleConfirmTableRow from "./shipping-schedule-confirm-table-row";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-
+import { Database } from "@/schema";
+import axios from "axios";
 
 const ShippingScheduleConfirmModal = () => {
-  const router = useRouter();
-  const checkedOrders = useStore((state) => state.checkedOrders);
-  const resetCheckedOrders = useStore((state) => state.resetCheckedOrders);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
-  const supabase = createClientComponentClient();
+  const router = useRouter();
+  const supabase = createClientComponentClient<Database>();
+  const currentUser = useStore((state) => state.currentUser);
+  const checkedOrders = useStore((state) => state.checkedOrders);
+  const resetCheckedOrders = useStore((state) => state.resetCheckedOrders);
+  const [shippingAddresses, setShippingAddresses] = useState([]);
 
-  const methods = useForm<ShippingScheduleInputs>();
+  const methods = useForm<ShippingScheduleInputs>({
+    defaultValues: {
+      shippingDate: format(new Date(), "yyyy-MM-dd"),
+    },
+  });
   const { handleSubmit, reset } = methods;
 
   const inputReset = () => {
@@ -34,29 +41,49 @@ const ShippingScheduleConfirmModal = () => {
   };
 
   const onSubmit: SubmitHandler<ShippingScheduleInputs> = async (data) => {
-    // await createShippingHistory(data);
-    await updateShippingSchedule(data);
+    console.log(data);
+    const id = await createShippingHistory(data);
+    await createShippingDetails(data, id);
+    await updateOrderDetail(data);
     inputReset();
     router.refresh();
   };
 
   const createShippingHistory = async (data: ShippingScheduleInputs) => {
-    const newContents = data.contents.map((content) => (
-      {
+    const { data: shippingHistory, error } = await supabase
+      .from("shipping_histories")
+      .insert({
         shipping_date: data.shippingDate,
-        shippingAddress: content.shippingAddress,
-        order_detail_id: content.order_detail_id,
-        quantity: content.quantity,
-        comment: content.comment
-      }
-    ));
-    const { error } = await supabase
-      .from("order_details")
-      .insert({ ...newContents })
-      .select("*");
+        created_by: currentUser?.id,
+      })
+      .select("*")
+      .single();
+    if (error) {
+      console.log(error.message);
+    }
+    if (!shippingHistory) return;
+    return shippingHistory.id;
   };
 
-  const updateShippingSchedule = async (data: ShippingScheduleInputs) => {
+  const createShippingDetails = async (
+    data: ShippingScheduleInputs,
+    id: number | undefined
+  ) => {
+    if (!id) return;
+    const newContents = data.contents?.map((content) => ({
+      shipping_history_id: id,
+      shipping_address_id: content.shippingAddress,
+      order_detail_id: content.order_detail_id,
+      quantity: Number(content.quantity),
+    }));
+    const { error } = await supabase
+      .from("shipping_details")
+      .insert([...newContents])
+      .select("*");
+    console.log(error);
+  };
+
+  const updateOrderDetail = async (data: ShippingScheduleInputs) => {
     if (!data) return;
     data.contents?.forEach(async (content) => {
       const { error } = await supabase
@@ -68,6 +95,15 @@ const ShippingScheduleConfirmModal = () => {
     });
     resetCheckedOrders();
   };
+
+  useEffect(() => {
+    const getShippingAddresses = async () => {
+      const res = await axios("/api/shipping-addresses");
+      const data = res.data;
+      setShippingAddresses(data);
+    };
+    getShippingAddresses();
+  }, []);
 
   const inputStyle =
     "!border !border-gray-300 bg-white text-gray-900 shadow-md shadow-gray-900/5 ring-4 ring-transparent placeholder:text-gray-500 focus:!border-gray-900 focus:!border-t-gray-900 focus:ring-gray-900/10";
@@ -110,6 +146,7 @@ const ShippingScheduleConfirmModal = () => {
                     <ShippingScheduleConfirmTableRow
                       key={checkedOrder.id}
                       checkedOrder={checkedOrder}
+                      shippingAddresses={shippingAddresses}
                       methods={methods}
                       idx={idx}
                     />

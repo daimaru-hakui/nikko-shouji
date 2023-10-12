@@ -93,7 +93,7 @@ const ShippingScheduleTableRow: FC<Props> = ({
         {shippingSchedule?.quantity}
       </td>
       <td className={`${StyleTableTd}`}>
-        {shippingSchedule.order_histories?.shipping_addresses?.customer}
+        {shippingSchedule.order_histories?.shipping_addresses?.name}
       </td>
       <td className={`${StyleTableTd}`}>
         {shippingSchedule?.order_histories?.sample ? "サンプル" : "通常発注"}

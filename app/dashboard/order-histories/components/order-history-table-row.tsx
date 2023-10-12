@@ -103,7 +103,7 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
     }
   };
 
-  const StyleTableTd = "py-2 px-1 text-left border-b";
+  const StyleTableTd = "py-1 px-1 text-left border-b";
 
   const inputStyle =
     "m-0.5 !border !border-gray-300 bg-white text-gray-900 ring-4 ring-transparent placeholder:text-gray-500";
@@ -122,7 +122,7 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
         {format(new Date(order.created_at), "yyyy年MM月dd日 HH時mm分")}
       </td>
       <td className={`${StyleTableTd}`}>
-        {order?.shipping_addresses?.customer}
+        {order?.shipping_addresses?.name}
       </td>
       <td className={`${StyleTableTd}`}>{getStatus(order.order_status)}</td>
       <td className={`${StyleTableTd}`}>

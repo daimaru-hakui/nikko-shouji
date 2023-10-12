@@ -26,8 +26,13 @@ export const sidebarLinks = [
     icon: <SlCalender />,
   },
   {
-    path: "/dashboard/shipping-histories",
+    path: "/dashboard/shipping-details",
     name: "出荷履歴",
+    icon: <RiIndentDecrease />,
+  },
+  {
+    path: "/dashboard/shipping-histories",
+    name: "出荷伝票",
     icon: <RiIndentDecrease />,
   },
 ];

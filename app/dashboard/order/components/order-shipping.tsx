@@ -51,7 +51,7 @@ const OrderShipping: FC = () => {
       <div className='font-bold'>お届け先/お届け方法</div>
       <div className='w-full mt-3 p-3 flex flex-col md:flex-row justify-between border border-gray-900/10'>
         <div className=''>
-          <div>{shippingAddress?.customer}</div>
+          <div>{shippingAddress?.name}</div>
           <div className='flex gap-3  w-full'>
             <div>{shippingAddress?.post_code}</div>
             <div>{shippingAddress?.address}</div>
