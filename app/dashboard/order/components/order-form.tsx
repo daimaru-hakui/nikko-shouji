@@ -45,29 +45,18 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
           color: "",
           size: "",
           quantity: "",
+          processing: false,
           comment: "",
         },
       ],
     },
   });
 
-  const { control, handleSubmit,  reset } = methods;
+  const { control, handleSubmit, reset } = methods;
   const { append, fields, remove } = useFieldArray({
     control,
     name: "contents",
   });
-  useEffect(() => {
-    const getHistory = async()=>{
-      const res = await fetch("/api/orderHistories", {
-        method: "get",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-    }
-    getHistory()
-  }, []);
 
   const addTableRow = () => {
     append({
@@ -78,6 +67,7 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
       color: "",
       size: "",
       quantity: "",
+      processing: false,
       comment: "",
     });
   };
@@ -100,9 +90,7 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
       .from("order_histories")
       .insert({
         shipping_address_id: Number(carts.shippingAddress),
-        desired_delivery_on: carts.desiredDeliveryOn,
         order_number: carts.orderNumber.trim().slice(0, 30),
-        sample: carts.sample,
         topic_name: carts.topicName.trim().slice(0, 30),
       })
       .select("id")
@@ -210,8 +198,8 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
             {activeStep === 0
               ? "クリア"
               : activeStep === 1 || activeStep === 2
-              ? "戻る"
-              : "発注画面"}
+                ? "戻る"
+                : "発注画面"}
           </Button>
 
           {activeStep === 0 && (

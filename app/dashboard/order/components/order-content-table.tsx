@@ -55,6 +55,7 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
           <th className="px-2">サイズ</th>
           <th className="px-2">数量<span className='text-red-500'>*</span></th>
           <th className="px-2">備考</th>
+          <th className="px-2 w-28 text-center">二次加工</th>
         </tr>
       </thead>
       <tbody>

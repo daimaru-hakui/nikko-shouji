@@ -57,10 +57,8 @@ export const useStore = create<Store>((set) => ({
   toggleSidebar: () => set((state) => ({ isSidebar: !state.isSidebar })),
   carts: {
     shippingAddress: 0,
-    sample: false,
     orderNumber: "",
     topicName: "",
-    desiredDeliveryOn: "",
     contents: [],
   },
   setCartContents: (orderInputs) =>
@@ -77,10 +75,8 @@ export const useStore = create<Store>((set) => ({
     set({
       carts: {
         shippingAddress: 0,
-        sample: false,
         orderNumber: "",
         topicName: "",
-        desiredDeliveryOn: "",
         contents: [],
       },
     }),

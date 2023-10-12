@@ -18,7 +18,7 @@ interface Order extends OrderHistory {
 
 interface ShippingSchedule extends OrderDetail {
   order_histories: Order | null;
-  suppliers:Supplier | null;
+  suppliers: Supplier | null;
 }
 
 interface Props {
@@ -70,7 +70,6 @@ const ShippingScheduleTable: FC<Props> = ({ shippingSchedules, userId }) => {
             <th className={`${StyleTableTh}`}>受付番号</th>
             <th className={`${StyleTableTh}`}>発注NO.</th>
             <th className={`${StyleTableTh}`}>発注日時</th>
-            <th className={`${StyleTableTh}`}>希望納期</th>
             <th className={`${StyleTableTh}`}>メーカー</th>
             <th className={`${StyleTableTh}`}>品番</th>
             <th className={`${StyleTableTh}`}>品名</th>

@@ -70,7 +70,7 @@ const ShippingScheduleConfirmModal = () => {
     id: number | undefined
   ) => {
     if (!id) return;
-    const newContents = data.contents?.map((content) => ({
+    let newContents = data.contents?.map((content) => ({
       shipping_history_id: id,
       shipping_address_id: content.shippingAddress,
       order_detail_id: content.order_detail_id,
@@ -78,7 +78,7 @@ const ShippingScheduleConfirmModal = () => {
     }));
     const { error } = await supabase
       .from("shipping_details")
-      .insert([...newContents])
+      .insert(newContents)
       .select("*");
     console.log(error);
   };

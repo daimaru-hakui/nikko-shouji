@@ -1,4 +1,5 @@
 import { useStore } from "@/store";
+import { Switch } from "@material-tailwind/react";
 import React, { FC, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -31,13 +32,13 @@ const OrderContentTableRow: FC<Props> = ({
   const suppliers = useStore((state) => state.suppliers);
   const supplierId = watch(`contents.${idx}.supplierId`);
   const supplier = suppliers.find((supplier) => supplier.id === +supplierId);
-  
+
   useEffect(() => {
     if (supplier) {
       setValue(`contents.${idx}.supplierName`, supplier?.name);
     }
-  }, [idx,setValue,supplier]);
-  
+  }, [idx, setValue, supplier]);
+
   const copyRow = (idx: number) => {
     const contetns = getValues("contents");
     const obj = contetns[idx];
@@ -70,7 +71,7 @@ const OrderContentTableRow: FC<Props> = ({
       </td>
       <td>
         <select
-          style={{ padding: "0.8rem" }}
+          style={{ padding: "0.92rem" }}
           className={`${inputStyle} `}
           defaultValue=""
           {...register(`contents.${idx}.supplierId`)}
@@ -145,10 +146,16 @@ const OrderContentTableRow: FC<Props> = ({
           {...register(`contents.${idx}.comment`, { maxLength: 50 })}
         />
       </td>
+      <td>
+        <div className="flex justify-center">
+          <Switch crossOrigin={undefined}
+            {...register(`contents.${idx}.processing`)} />
+        </div>
+      </td>
       <td className="p-3">
         {idx !== 0 && (
           <AiOutlineDelete
-            className="cursor-pointer"
+            className="cursor-pointer text-xl"
             onClick={removeRowHandler}
           />
         )}

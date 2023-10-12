@@ -7,14 +7,13 @@ type OrderInputs = {
     color: string;
     size: string;
     quantity: string;
+    processing:boolean
     comment: string;
   }[];
 };
 
 type Carts = {
   shippingAddress: number;
-  desiredDeliveryOn: string;
-  sample: boolean;
   orderNumber: string;
   topicName: string;
   contents: {
@@ -25,6 +24,7 @@ type Carts = {
     color: string;
     size: string;
     quantity: string;
+    processing: boolean;
     comment: string;
   }[];
 };

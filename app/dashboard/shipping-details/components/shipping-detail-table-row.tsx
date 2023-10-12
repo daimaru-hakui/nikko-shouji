@@ -34,7 +34,7 @@ const ShippingDetailTableRow: FC<Props> = ({ shippingDetail }) => {
       <td className={`${StyleTableTd}`}>
         {shippingDetail.order_details?.order_histories?.order_number}
       </td>
-      {}
+      { }
       <td className={`${StyleTableTd}`}>
         {shippingDetail.order_details?.order_histories?.created_at &&
           format(
@@ -65,9 +65,9 @@ const ShippingDetailTableRow: FC<Props> = ({ shippingDetail }) => {
         {shippingDetail.quantity}
       </td>
       <td className={`${StyleTableTd}`}>
-        {shippingDetail.order_details?.order_histories?.sample
-          ? "サンプル"
-          : "通常発注"}
+        {shippingDetail.order_details?.order_histories?.processing
+          ? "二次加工あり"
+          : ""}
       </td>
       <td className={`${StyleTableTd}`}>
         {shippingDetail.shipping_addresses?.name}

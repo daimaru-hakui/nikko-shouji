@@ -19,14 +19,14 @@ const OrderShipping: FC = () => {
     setCartOthers({ name, value: e.target.value });
   };
 
-  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name;
-    if (e.target.checked === true) {
-      setCartOthers({ name, value: true });
-    } else {
-      setCartOthers({ name, value: false });
-    };
-  };
+  // const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const name = e.target.name;
+  //   if (e.target.checked === true) {
+  //     setCartOthers({ name, value: true });
+  //   } else {
+  //     setCartOthers({ name, value: false });
+  //   };
+  // };
 
   useEffect(() => {
     const getShippingAddress = async () => {
@@ -66,7 +66,7 @@ const OrderShipping: FC = () => {
         </div>
       </div>
 
-      <div className='w-full mt-12'>
+      {/* <div className='w-full mt-12'>
         <div className='font-bold'>希望納期</div>
         <input className={`${inputStyle} mt-3 p-3 w-full max-w-[calc(500px)]`}
           type="date"
@@ -74,7 +74,7 @@ const OrderShipping: FC = () => {
           value={carts.desiredDeliveryOn}
           onChange={handleChangeInput}
         />
-      </div>
+      </div> */}
 
       <div className='w-full mt-12'>
         <div className='font-bold'>貴社注文番号</div>
@@ -94,7 +94,7 @@ const OrderShipping: FC = () => {
         />
       </div>
 
-      <div className='mt-12'>
+      {/* <div className='mt-12'>
         <div className='font-bold'>サンプル</div>
         <div className='mt-1'>
           <Checkbox
@@ -105,7 +105,7 @@ const OrderShipping: FC = () => {
             crossOrigin={undefined}
           />
         </div>
-      </div>
+      </div> */}
     </div >
   );
 };
