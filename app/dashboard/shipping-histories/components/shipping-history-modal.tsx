@@ -25,11 +25,11 @@ interface OrderDetailHistory extends OrderDetail {
 
 interface Order extends ShippingDetail {
   order_details: OrderDetailHistory | null;
-  shipping_addresses: ShippingAddress | null;
 }
 
 interface ShippingHistoryAddress extends ShippingHistory {
   shipping_details: Order[] | null;
+  shipping_addresses: ShippingAddress | null;
 }
 
 interface Props {
@@ -85,7 +85,6 @@ const ShippingHistoryModal: FC<Props> = ({ shippingHistory }) => {
                   <th className={`${StyleTableTh}`}>カラー</th>
                   <th className={`${StyleTableTh}`}>サイズ</th>
                   <th className={`${StyleTableTh}`}>数量</th>
-                  <th className={`${StyleTableTh}`}>出荷先</th>
                   <th className={`${StyleTableTh}`}>コメント</th>
                 </tr>
               </thead>
@@ -109,9 +108,6 @@ const ShippingHistoryModal: FC<Props> = ({ shippingHistory }) => {
                     </td>
                     <td className={`${StyleTableTd}`}>
                       {detail.order_details?.quantity}
-                    </td>
-                    <td className={`${StyleTableTd}`}>
-                      {detail.shipping_addresses?.name}
                     </td>
                     <td className={`${StyleTableTd}`}>
                       {detail.order_details?.comment}

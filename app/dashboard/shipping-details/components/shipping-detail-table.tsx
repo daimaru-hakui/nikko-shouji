@@ -13,10 +13,12 @@ type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 interface OrderDetailHistory extends OrderDetail {
   order_histories: OrderHistory | null;
 }
+interface ShippingHistoryAddress extends ShippingHistory {
+  shipping_addresses: ShippingAddress | null;
+}
 
 interface ShippingDetailHistory extends ShippingDetail {
-  shipping_histories: ShippingHistory | null;
-  shipping_addresses: ShippingAddress | null;
+  shipping_histories: ShippingHistoryAddress | null;
   order_details: OrderDetailHistory | null;
 }
 

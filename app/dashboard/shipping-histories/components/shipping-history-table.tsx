@@ -16,11 +16,11 @@ interface OrderDetailHistory extends OrderDetail {
 
 interface Order extends ShippingDetail {
   order_details: OrderDetailHistory | null;
-  shipping_addresses: ShippingAddress | null;
 }
 
 interface ShippingHistoryAddress extends ShippingHistory {
   shipping_details: Order[] | null;
+  shipping_addresses: ShippingAddress | null;
 }
 
 interface Props {

@@ -12,7 +12,7 @@ const ShippingHistory:NextPage = async() => {
       const { data, error } = await supabase
         .from("shipping_histories")
         .select(
-          "*,shipping_details(*,shipping_addresses(*),order_details(*,order_histories(*)))"
+          "*,shipping_addresses(*),shipping_details(*,order_details(*,order_histories(*)))"
         )
         .order("created_at", { ascending: false });
       if (error) {

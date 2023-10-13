@@ -14,9 +14,12 @@ interface OrderDetailHistory extends OrderDetail {
   order_histories: OrderHistory | null;
 }
 
-interface ShippingDetailHistory extends ShippingDetail {
-  shipping_histories: ShippingHistory | null;
+interface ShippingHistoryAddress extends ShippingHistory {
   shipping_addresses: ShippingAddress | null;
+}
+
+interface ShippingDetailHistory extends ShippingDetail {
+  shipping_histories: ShippingHistoryAddress | null;
   order_details: OrderDetailHistory | null;
 }
 
@@ -70,7 +73,7 @@ const ShippingDetailTableRow: FC<Props> = ({ shippingDetail }) => {
           : ""}
       </td>
       <td className={`${StyleTableTd}`}>
-        {shippingDetail.shipping_addresses?.name}
+        {shippingDetail.shipping_histories?.shipping_addresses?.name}
       </td>
       <td className={`${StyleTableTd}`}></td>
     </tr>
