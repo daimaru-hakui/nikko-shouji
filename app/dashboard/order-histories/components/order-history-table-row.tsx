@@ -13,9 +13,11 @@ type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
+type ShippingDetail = Database["public"]["Tables"]["shipping_details"]["Row"];
 
 interface OrderDetailSupllier extends OrderDetail {
-  suppliers:Supplier | null
+  suppliers: Supplier | null;
+  shipping_details: ShippingDetail[];
 }
 
 interface Order extends OrderHistory {
@@ -121,9 +123,7 @@ const OrderHistoryTableRow: FC<Props> = ({ order }) => {
       <td className={`${StyleTableTd}`}>
         {format(new Date(order.created_at), "yyyy年MM月dd日 HH時mm分")}
       </td>
-      <td className={`${StyleTableTd}`}>
-        {order?.shipping_addresses?.name}
-      </td>
+      <td className={`${StyleTableTd}`}>{order?.shipping_addresses?.name}</td>
       <td className={`${StyleTableTd}`}>{getStatus(order.order_status)}</td>
       <td className={`${StyleTableTd}`}>
         {order.order_status === "UNREAD" && (

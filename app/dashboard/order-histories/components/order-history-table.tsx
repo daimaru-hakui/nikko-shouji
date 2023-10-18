@@ -9,9 +9,11 @@ type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
+type ShippingDetail = Database["public"]["Tables"]["shipping_details"]["Row"];
 
 interface OrderDetailSupllier extends OrderDetail {
-  suppliers:Supplier | null
+  suppliers: Supplier | null;
+  shipping_details: ShippingDetail[];
 }
 
 interface Order extends OrderHistory {
@@ -25,7 +27,7 @@ interface Props {
 }
 
 const OrderHistoryTable: FC<Props> = ({ orders, userId }) => {
-  const {currentUser} = useAuth(userId)
+  const { currentUser } = useAuth(userId);
 
   const StyleTableTh = "py-2 px-1 text-left border-b";
 

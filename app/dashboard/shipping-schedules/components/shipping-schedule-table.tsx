@@ -58,7 +58,7 @@ const ShippingScheduleTable: FC<Props> = ({ shippingSchedules, userId }) => {
       <table className="w-full max-w-[calc(1500px)] min-w-[calc(1500px)]">
         <thead>
           <tr>
-            {currentUser?.role === "admin" && (
+            {/* {currentUser?.role === "admin" && (
               <th className={`${StyleTableTh}`}>
                 <Checkbox
                   name="sample"
@@ -66,7 +66,7 @@ const ShippingScheduleTable: FC<Props> = ({ shippingSchedules, userId }) => {
                   crossOrigin={undefined}
                 />
               </th>
-            )}
+            )} */}
             <th className={`${StyleTableTh}`}>受付番号</th>
             <th className={`${StyleTableTh}`}>発注NO.</th>
             <th className={`${StyleTableTh}`}>発注日時</th>
