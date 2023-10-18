@@ -42,6 +42,14 @@ const OrderContentTable: FC<Props> = ({ methods, fields, remove }) => {
     setDragIndex(null);
   };
 
+  const getSuppliers = async () => {
+    const url = `${process.env.NEXT_PUBLIC_URL}/api/suppliers`;
+    const response = await fetch(url);
+    const users = await response.json();
+    console.log(users);
+    return users;
+  };
+
   return (
     <table className="w-full max-w-[calc(1500px)] min-w-[calc(1400px)] ">
       <thead>

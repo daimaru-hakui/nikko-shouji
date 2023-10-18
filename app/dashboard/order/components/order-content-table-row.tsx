@@ -142,12 +142,12 @@ const OrderContentTableRow: FC<Props> = ({
       </td>
       <td>
         <input
-          className={`${inputStyle} p-3 w-full`}
+          className={`${inputStyle} p-3 w-[calc(150px)]`}
           {...register(`contents.${idx}.comment`, { maxLength: 50 })}
         />
       </td>
       <td>
-        <div className="flex justify-center">
+        <div className="flex justify-center w-[calc(100px)]">
           <Switch crossOrigin={undefined}
             {...register(`contents.${idx}.processing`)} />
         </div>
