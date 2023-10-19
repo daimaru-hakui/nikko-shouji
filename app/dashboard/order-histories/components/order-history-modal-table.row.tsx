@@ -18,20 +18,21 @@ const OrderHistoryModalTableRow: FC<Props> = ({ detail }) => {
   const reduceSum = (detail: OrderDetailSupllier) => {
     const array = detail.shipping_details.map((detail) => detail.quantity);
     const sum = array.reduce((prev, current) => prev + current, 0);
-    return sum
+    return sum;
   };
 
-  const StyleTableTd = "px-2 py-1 text-left text-black border-b";
+  const StyleTableTd = "px-2 py-2 text-left text-black border-b";
   return (
     <tr key={detail.id}>
       <td className={`${StyleTableTd}`}>{detail.suppliers?.name}</td>
       <td className={`${StyleTableTd}`}>{detail.product_number}</td>
       <td className={`${StyleTableTd}`}>{detail.product_name}</td>
       <td className={`${StyleTableTd}`}>{detail.color}</td>
-      <td className={`${StyleTableTd}`}>{detail.size}</td>
-      <td className={`${StyleTableTd}`}>{detail.order_quantity}</td>
-      <td className={`${StyleTableTd}`}>{detail.quantity}</td>
-      <td className={`${StyleTableTd}`}>{reduceSum(detail)}</td>
+      <td className={`${StyleTableTd} text-center`}>{detail.size}</td>
+      <td className={`${StyleTableTd} text-center`}>{detail.order_quantity}</td>
+      <td className={`${StyleTableTd} text-center`}>{detail.quantity}</td>
+      <td className={`${StyleTableTd} text-center`}>{reduceSum(detail)}</td>
+      <td className={`${StyleTableTd} text-center`}>{detail.processing && "あり"}</td>
       <td className={`${StyleTableTd}`}>{detail.comment}</td>
     </tr>
   );
