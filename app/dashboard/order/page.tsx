@@ -8,26 +8,14 @@ const OrderOage = async () => {
   const supabase = createServerComponentClient<Database>({ cookies });
 
   const getProducts = async () => {
-    const { data, error } = await supabase
-      .from("order_details")
-      .select("*")
-      .limit(1000);
-    if (error) {
-      console.log(error.message);
-    }
-    if (!data) return;
+    const { data, error } = await supabase.rpc("get_products");
+    if (error) console.log(error.message);
     return data;
   };
 
   const getSuppliers = async () => {
-    const { data, error } = await supabase
-      .from("suppliers")
-      .select("*")
-      .order("order", { ascending: true });
-    if (error) {
-      console.log(error.message);
-    }
-    if (!data) return;
+    const { data, error } = await supabase.rpc("get_suppliers");
+    if (error) console.log(error.message);
     return data;
   };
 

@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { Session } from "@supabase/supabase-js";
 import { Database } from "@/schema";
 
+type Suppliers = Database["public"]["Functions"]["get_suppliers"]["Returns"];
 type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
 type User = Database["public"]["Tables"]["users"]["Row"];
 type OrderHistory = Database["public"]["Tables"]["order_histories"]["Row"];
 type OrderDetail = Database["public"]["Tables"]["order_details"]["Row"];
 type ShippingAddress =
   Database["public"]["Tables"]["shipping_addresses"]["Row"];
-
 interface Order extends OrderHistory {
   shipping_addresses: ShippingAddress | null;
 }
@@ -42,8 +42,8 @@ type Store = {
   productNames: string[];
   productColors: string[];
   setProducts: (products: OrderDetail[]) => void;
-  suppliers: Supplier[];
-  setSuppliers: (suppliers: Supplier[]) => void;
+  suppliers: Suppliers;
+  setSuppliers: (suppliers:Suppliers) => void;
 };
 
 export const useStore = create<Store>((set) => ({

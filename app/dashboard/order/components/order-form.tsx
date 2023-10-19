@@ -13,12 +13,13 @@ import OrderCompletion from "./order-completion";
 import { useRouter } from "next/navigation";
 import { Database } from "@/schema";
 
-type Product = Database["public"]["Tables"]["order_details"]["Row"];
-type Supplier = Database["public"]["Tables"]["suppliers"]["Row"];
+type Products = Database["public"]["Functions"]["get_products"]["Returns"]
+type Suppliers = Database["public"]["Functions"]["get_suppliers"]["Returns"]
+// type Suppliers = Database["public"]["Functions"]["get_suppliers"]["Returns"]
 
 interface Props {
-  products: Product[];
-  suppliers: Supplier[];
+  products: Products;
+  suppliers:Suppliers;
 }
 
 const OrderForm: FC<Props> = ({ products, suppliers }) => {
@@ -158,6 +159,15 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
     setSuppliers(suppliers);
   }, [suppliers, setSuppliers]);
 
+  // const clickHandler =async () => {
+  //   const {error} = await supabase.rpc('insert_order',{
+  //     shipping_address_id:1,
+  //     order_number:"111222",
+  //     topic_name:"テスト"
+  //   })
+  //   console.log(error)
+  // }
+
   return (
     <>
       <StepperWithContent
@@ -165,6 +175,7 @@ const OrderForm: FC<Props> = ({ products, suppliers }) => {
         setIsLastStep={setIsLastStep}
         setIsFirstStep={setIsFirstStep}
       />
+      {/* <Button onClick={clickHandler}>ボタン</Button> */}
       <form className="mt-12" onSubmit={handleSubmit(onSubmit)}>
         {activeStep === 0 && (
           <div className="overflow-auto max-h-[calc(100vh-220px)] p-3">
